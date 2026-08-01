@@ -1,46 +1,44 @@
 name: AppsMax REST API v1
 description: >-
-  REST API for the AppsMax SaaS platform, a Russian-language service for launching apps, booking, orders, mini apps,
-  groups, channels, messaging, GigaChat and integrations in MAX and Telegram. The server-to-server API lets integrators
-  read bots, connections, mini apps, scenarios and menus, and work with applications, subscribers and campaigns.
+  REST API for AppsMax, a Russian-language SaaS platform for customer requests, online booking, bots, mini apps,
+  communities and business workflows in MAX and Telegram. Server-to-server, Bearer-auth, scope-based access with a
+  public OpenAPI 3.0.3 contract.
 url: https://appsmax-rest-api-v1.apievangelist.com/apis.yml
-created: '2026-07-31'
-modified: '2026-07-31'
+created: '2026-08-01'
+modified: '2026-08-01'
 specificationVersion: '0.21'
 tags:
   - SaaS
   - Messaging
+  - Business Automation
   - Chatbots
   - Mini Apps
-  - Business Automation
-  - Workflow
-  - CRM
-  - Leads
+  - Customer Requests
+  - Lead Management
   - Campaigns
-  - Broadcast
-  - MAX
-  - Telegram
+  - CRM Integration
+  - Workflow Automation
+  - HoReCa
   - Russian-language
 apis:
   - name: AppsMax REST API
     description: >-
-      Server-to-server REST API (v1) with Bearer/scope authentication, 17 paths covering bots, connections, mini apps,
-      funnels, interactive menus, applications, campaigns and subscribers. Backed by a public OpenAPI 3.0.3 contract.
+      Server-to-server REST API (v1) for bots, mini apps, funnels, interactive menus, applications/leads, campaigns and
+      subscribers. Bearer-auth with scope-based access.
     humanURL: https://appsmax.ru/developers/
     baseURL: https://telegram.appsmax.ru/api/v1
     tags:
       - SaaS
       - Messaging
+      - Business Automation
       - Chatbots
       - Mini Apps
-      - Business Automation
-      - Workflow
-      - CRM
-      - Leads
+      - Customer Requests
+      - Lead Management
       - Campaigns
-      - Broadcast
-      - MAX
-      - Telegram
+      - CRM Integration
+      - Workflow Automation
+      - HoReCa
       - Russian-language
     properties:
       - type: OpenAPI
@@ -50,10 +48,10 @@ apis:
       - type: LLMSTxt
         url: https://appsmax.ru/llms.txt
 maintainers:
-  - FN: AppsMax REST API v1
-    url: https://appsmax.ru/developers/
+  - FN: AppsMax.ru team
+    url: https://appsmax.ru/contacts/
 generated:
   by: apis.io/add
   model: claude-opus-4-8
   confidence: 95
-  at: '2026-07-31T13:44:47.680Z'
+  at: '2026-08-01T12:14:56.900Z'
