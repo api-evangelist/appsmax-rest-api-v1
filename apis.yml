@@ -1,57 +1,105 @@
-name: AppsMax REST API v1
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: true
+  try_now: false
+  public: true
+  label: Freemium, self-serve — REST API gated to the paid Profi plan
+  confidence: high
+  source:
+    - https://appsmax.ru/pricing/
+    - https://appsmax.ru/.well-known/api-onboarding
+  generated: '2026-08-01'
+  method: manual
+aid: appsmax.ru:api-catalog
+name: AppsMax
 description: >-
-  REST API for AppsMax, a Russian-language SaaS platform for customer requests, online booking, bots, mini apps,
-  communities and business workflows in MAX and Telegram. Server-to-server, Bearer-auth, scope-based access with a
-  public OpenAPI 3.0.3 contract.
+  AppsMax.ru is a Russian-language SaaS platform for small business, communities and integrators, used to run customer
+  requests, online booking, orders, mini apps, groups, channels, permitted messaging, GigaChat and integrations inside
+  MAX and Telegram. Its developer surface is a single server-to-server REST API (v1) with a published OpenAPI 3.0.3
+  contract, an APIs.json index, an API Onboarding Descriptor and an llms.txt. AppsMax is not a product of, nor an
+  official representative of, MAX, Telegram or GigaChat.
+image: https://appsmax.ru/wp-content/themes/appsmax-site/assets/img/logo-appsmax.svg
 url: https://appsmax-rest-api-v1.apievangelist.com/apis.yml
-created: '2026-08-01'
-modified: '2026-08-01'
+type: Index
+kind: company
 specificationVersion: '0.21'
+created: '2026-07-31'
+modified: '2026-08-01'
+x-type: company
+x-source: apis.io/add submission 449f5bad-f495-4073-938a-4da9a1e356c7
+x-evidence:
+  source: https://appsmax.ru/apis.json
+  method: provider-published APIs.json, every advertised property fetched and confirmed 200
+  verified: '2026-08-01'
 tags:
+  - Company
   - SaaS
   - Messaging
   - Business Automation
   - Chatbots
   - Mini Apps
   - Customer Requests
-  - Lead Management
-  - Campaigns
-  - CRM Integration
   - Workflow Automation
-  - HoReCa
-  - Russian-language
+  - MAX
+  - Telegram
+  - Russian Language
 apis:
-  - name: AppsMax REST API
+  - aid: appsmax.ru:rest-api-v1
+    name: AppsMax REST API v1
     description: >-
-      Server-to-server REST API (v1) for bots, mini apps, funnels, interactive menus, applications/leads, campaigns and
-      subscribers. Bearer-auth with scope-based access.
+      Server-to-server API for managing AppsMax organizations, bots, connections, mini apps, funnels, interactive menus,
+      customer requests, campaigns and subscribers. 17 paths and 21 operations across the Access, Organizations, Bots,
+      Miniapps, Funnels, Interactive menu, Applications, Campaigns and Subscribers tags. Authenticated with an
+      organization-owned API token, sent as an Authorization Bearer header or an X-Api-Token fallback header, with
+      scope-based access. This is the AppsMax platform API, not an official API of MAX or Telegram.
+    image: https://appsmax.ru/wp-content/themes/appsmax-site/assets/img/logo-appsmax.svg
     humanURL: https://appsmax.ru/developers/
     baseURL: https://telegram.appsmax.ru/api/v1
+    version: 1.0.0
     tags:
-      - SaaS
-      - Messaging
-      - Business Automation
+      - REST
+      - OpenAPI
       - Chatbots
       - Mini Apps
       - Customer Requests
-      - Lead Management
-      - Campaigns
-      - CRM Integration
       - Workflow Automation
-      - HoReCa
-      - Russian-language
+      - Campaigns
+      - Subscribers
+      - MAX
+      - Telegram
+      - Russian Language
     properties:
-      - type: OpenAPI
-        url: https://appsmax.ru/developers/openapi.json
       - type: Documentation
         url: https://appsmax.ru/developers/
+      - type: OpenAPI
+        mediaType: application/vnd.oai.openapi+json;version=3.0
+        url: https://appsmax.ru/developers/openapi.json
+      - type: GettingStarted
+        url: https://appsmax.ru/developers/#quick-start
+      - type: Authentication
+        url: https://appsmax.ru/developers/#authentication
+      - type: APIOnboarding
+        mediaType: application/json
+        url: https://appsmax.ru/.well-known/api-onboarding
+      - type: RateLimits
+        url: https://appsmax.ru/developers/#errors
+      - type: Pricing
+        url: https://appsmax.ru/pricing/
+      - type: TermsOfService
+        url: https://appsmax.ru/documents/publichnaya-oferta/
+      - type: PrivacyPolicy
+        url: https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/
+      - type: Support
+        url: https://appsmax.ru/contacts/
       - type: LLMSTxt
         url: https://appsmax.ru/llms.txt
+common:
+  - type: Website
+    url: https://appsmax.ru/
+  - type: APIsJSON
+    url: https://appsmax.ru/apis.json
 maintainers:
   - FN: AppsMax.ru team
-    url: https://appsmax.ru/contacts/
-generated:
-  by: apis.io/add
-  model: claude-opus-4-8
-  confidence: 95
-  at: '2026-08-01T12:14:56.900Z'
+    email: info@appsmax.ru
+    url: https://appsmax.ru/developers/
