@@ -1,0 +1,125 @@
+generated: '2026-08-09'
+method: searched
+source: https://appsmax.ru/developers/#errors
+derived_from: openapi/appsmax-rest-api-v1-openapi-original.json
+format: custom-json-envelope
+problem_json: false
+
+envelope:
+  media_type: application/json
+  shape: |
+    {
+      "error": {
+        "code": "validation_failed",
+        "message": "Validation failed.",
+        "details": { "fields": { "bot_id": ["The bot id field is required."] } },
+        "meta": { "request_id": "..." }
+      }
+    }
+  required_fields: [error.code, error.message, error.meta.request_id]
+  note: >-
+    AppsMax publishes a single machine-readable error object on every failure. It is NOT
+    RFC 9457 application/problem+json — the media type stays application/json and the
+    envelope is a proprietary { error: { code, message, details, meta } } shape.
+
+correlation:
+  header: X-Request-Id
+  field: error.meta.request_id
+  guidance: Quote the request id to AppsMax support; do not send tokens or payloads.
+
+problems:
+  - status: 400
+    name: BadRequest
+    title: Malformed JSON or a syntactically invalid request
+    title_ru: Повреждённый JSON или синтаксически неверный запрос.
+    remediation: Send well-formed JSON with Content-Type application/json.
+    source_operations: [createApplication, syncApplicationTags, createCampaign, runCampaign, upsertSubscriber, updateSubscriber]
+
+  - status: 401
+    name: Unauthorized
+    title: Token missing, invalid or revoked
+    title_ru: Токен отсутствует, недействителен или отозван.
+    remediation: >-
+      Send Authorization Bearer (or the X-Api-Token fallback). If the token was revoked,
+      create a replacement in the AppsMax cabinet under Data -> Integrations -> API.
+    applies_to: all operations
+
+  - status: 403
+    name: Forbidden
+    title: Missing scope, or the object is outside the token's organization
+    title_ru: Нет нужного scope или доступа к организации.
+    remediation: >-
+      Grant the operation's x-required-scope to the token, or use a token belonging to the
+      organization that owns the object.
+    see: scopes/appsmax-rest-api-v1-scopes.yml
+
+  - status: 404
+    name: NotFound
+    title: Resource not found within the accessible perimeter
+    title_ru: Ресурс не найден в доступном контуре.
+    remediation: >-
+      Confirm the id and that the object belongs to the token's organization. Cross-organization
+      objects are deliberately reported as not found.
+
+  - status: 409
+    name: Conflict
+    title: Idempotency-Key already used with a different request
+    title_ru: Idempotency-Key уже использован с другим запросом.
+    remediation: >-
+      Reuse an Idempotency-Key only with a byte-identical body. Generate a new key for a new
+      request.
+    source_operations: [createApplication, createCampaign]
+    see: conventions/appsmax-rest-api-v1-conventions.yml
+
+  - status: 413
+    name: PayloadTooLarge
+    title: Request body exceeds the allowed size
+    title_ru: Тело запроса превышает допустимый размер.
+    remediation: Reduce the payload; split large tag or subscriber batches.
+
+  - status: 415
+    name: UnsupportedMediaType
+    title: A body-bearing request requires Content-Type application/json
+    title_ru: 'Для запроса с телом требуется Content-Type: application/json.'
+    remediation: Set Content-Type application/json on every POST/PATCH.
+
+  - status: 422
+    name: ValidationFailed
+    code: validation_failed
+    title: Request fields failed validation
+    title_ru: Поля запроса не прошли валидацию.
+    remediation: >-
+      Read error.details.fields — it maps each rejected field to its validation messages.
+      Common cause: bot_id absent or not owned by the token's organization; top-level status
+      is not accepted when creating an application.
+
+  - status: 429
+    name: RateLimited
+    title: Token or operation rate limit exceeded
+    title_ru: Превышен rate limit токена или операции.
+    remediation: >-
+      Back off exponentially and honour Retry-After. Do not increase burst. Read
+      X-RateLimit-Limit / X-RateLimit-Remaining. Campaign create and run carry extra limits.
+    response_headers: [X-RateLimit-Limit, X-RateLimit-Remaining, Retry-After]
+
+  - status: 500
+    name: ServerError
+    title: Unexpected server error
+    title_ru: Непредвиденная ошибка.
+    remediation: Retry with backoff and give X-Request-Id to AppsMax support.
+
+coverage:
+  documented_statuses: [400, 401, 403, 404, 409, 413, 415, 422, 429, 500]
+  operations_with_4xx: 21
+  operations_with_5xx: 21
+  note: >-
+    Every one of the 21 published operations declares 401, 429 and 500; write operations
+    additionally declare 400/413/415/422 and, where idempotent, 409.
+
+x-evidence:
+  fetched: '2026-08-09'
+  urls:
+    - url: https://appsmax.ru/developers/
+      http_status: 200
+    - url: https://appsmax.ru/developers/openapi.json
+      http_status: 200

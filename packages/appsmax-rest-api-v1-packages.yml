@@ -1,0 +1,62 @@
+generated: '2026-08-09'
+method: searched
+source: >-
+  https://appsmax.ru/developers/ + https://gitverse.ru/appsmax/appsmax-api-reference +
+  public package registries
+
+packages: []
+
+finding: >-
+  AppsMax ships NO first-party client library, in any language. This is not an omission in our
+  harvest — the provider states it twice in its own words and asserts it machine-readably.
+
+provider_statement:
+  docs: >-
+    "Нет публичного SDK. Официальные Python, PHP, JavaScript или другие SDK AppsMax сейчас не
+    заявлены. Используйте обычный HTTPS-клиент и OpenAPI." — https://appsmax.ru/developers/
+  repo: >-
+    "Официальные SDK для Python, PHP, JavaScript и других языков сейчас не заявлены.
+    Используйте обычный HTTPS-клиент и OpenAPI." — https://gitverse.ru/appsmax/appsmax-api-reference
+  machine_readable: 'x-appsmax-public-sdk: false in https://appsmax.ru/developers/openapi.json'
+
+registries_searched:
+  - registry: npm
+    query: appsmax
+    results: 0
+  - registry: PyPI
+    query: appsmax
+    result: 404
+  - registry: Packagist
+    query: appsmax
+    results: 0
+    note: Matches returned were for the unrelated Brazilian "Appmax" payments API.
+  - registry: RubyGems
+    query: appsmax
+    results: 0
+  - registry: GitVerse
+    org: appsmax
+    finding: >-
+      One public repository, appsmax/appsmax-api-reference — the OpenAPI contract, safe curl
+      examples, a two-request Postman quickstart collection, SECURITY.md and NOTICE.md.
+      NOTICE.md states explicitly that it is not a publication of AppsMax source code and does
+      not claim an official SDK.
+
+recommended_integration_path: >-
+  Generate a client from the published OpenAPI 3.0.3 contract at
+  https://appsmax.ru/developers/openapi.json, or call the API with a plain HTTPS client. Start
+  from the provider's Postman quickstart collection.
+
+what_the_provider_does_publish:
+  openapi: https://appsmax.ru/developers/openapi.json
+  postman_collection: https://gitverse.ru/appsmax/appsmax-api-reference
+  curl_examples: examples/appsmax-rest-api-v1-curl-examples.md
+
+x-evidence:
+  fetched: '2026-08-09'
+  urls:
+    - url: https://registry.npmjs.org/-/v1/search?text=appsmax
+      http_status: 200
+    - url: https://pypi.org/pypi/appsmax/json
+      http_status: 404
+    - url: https://gitverse.ru/appsmax/appsmax-api-reference
+      http_status: 200

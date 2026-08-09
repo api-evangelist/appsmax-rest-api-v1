@@ -1,0 +1,172 @@
+generated: '2026-08-09'
+method: searched
+source: https://appsmax.ru/developers/
+derived_from: openapi/appsmax-rest-api-v1-openapi-original.json
+docs: https://appsmax.ru/developers/
+api: AppsMax REST API v1
+base_url: https://telegram.appsmax.ru/api/v1
+
+authentication:
+  style: bearer-token
+  primary_header: 'Authorization: Bearer <APPSMAX_API_TOKEN>'
+  fallback_header: X-Api-Token
+  query_parameter_supported: false
+  notes: >-
+    Server-to-server only. Every operation — including GET /ping — requires a valid token.
+    Tokens are owned by an AppsMax organization and are always confined to it; an object
+    belonging to another organization is returned as not found or forbidden. The token is
+    displayed once at creation in the cabinet and is rotated by revoke-and-replace.
+  artifact: authentication/appsmax-rest-api-v1-authentication.yml
+
+idempotency:
+  supported: true
+  header: Idempotency-Key
+  location: header
+  required: false
+  applies_to:
+    - createApplication   # POST /applications
+    - createCampaign      # POST /campaigns
+  key_format:
+    min_length: 1
+    max_length: 128
+    pattern: '^[A-Za-z0-9._:-]+$'
+    description: 1-128 characters; A-Z, a-z, 0-9, dot, underscore, colon and hyphen.
+  replay_semantics: >-
+    A repeated request carrying a previously seen Idempotency-Key returns the original
+    result with HTTP 200 instead of 201. Reusing the same key with a DIFFERENT request
+    body is rejected with HTTP 409 Conflict.
+  replay_signal_header: Idempotency-Replayed
+  replay_signal_values: ['true', 'false']
+  retention: not published
+  source: openapi components.parameters.IdempotencyKey + components.headers.IdempotencyReplayed
+  not_supported_on:
+    - syncApplicationTags
+    - runCampaign
+    - upsertSubscriber
+    - updateSubscriber
+  note: >-
+    upsertSubscriber is naturally idempotent by key rather than by header — it creates or
+    updates on the (bot_id + external_id) pair. runCampaign has no Idempotency-Key
+    parameter in the published contract.
+
+pagination:
+  style: page-number
+  framework: Laravel resource collections
+  request_params:
+    - name: page
+      in: query
+      description: 1-based page number.
+    - name: per_page
+      in: query
+      default_max: 100
+      exceptions:
+        - operation: listInteractiveMenuItems
+          max: 200
+      description: Server clamps per_page; collections accept 1-100, interactive menu 1-200.
+  response_fields:
+    - data     # array of resources
+    - links    # pagination links (next page URL)
+    - meta     # pagination metadata
+  guidance: >-
+    Follow the next-page URL returned in links rather than incrementing page manually.
+  source: openapi components.schemas.CollectionEnvelope + components.parameters.Page/PerPage100/PerPage200
+
+filtering_and_sorting:
+  array_params_style: 'repeated bracketed params, e.g. status[]=new&status[]=done'
+  common_filters:
+    - bot_id
+    - 'status[]'
+    - 'source[]'
+    - 'type[]'
+    - 'channel[]'
+    - tag
+    - group_id
+    - q
+    - created_from
+    - created_to
+  sort:
+    param: sort
+    values_by_resource:
+      applications: [created_at, submitted_at]
+      campaigns: [created_at]
+      subscribers: [created_at]
+    direction_param: direction
+    direction_values: [asc, desc]
+
+envelopes:
+  resource: '{ "data": { ... } }'
+  collection: '{ "data": [ ... ], "links": { ... }, "meta": { ... } }'
+  error: '{ "error": { "code": "...", "message": "...", "details": { ... }, "meta": { "request_id": "..." } } }'
+  media_type: application/json
+  problem_json: false
+  note: >-
+    AppsMax uses its own error envelope, not RFC 9457 application/problem+json.
+
+field_expansion:
+  supported: false
+  note: No expand / sparse-fieldset parameters are published.
+
+metadata:
+  supported: true
+  shape: >-
+    Applications and subscribers carry free-form payload / answers / form-metadata and a
+    tags array (up to 20 non-empty tags synced per application).
+
+request_tracing:
+  header: X-Request-Id
+  direction: bidirectional
+  behavior: >-
+    Every response carries X-Request-Id. When the client supplies a well-formed
+    X-Request-Id, AppsMax echoes it back unchanged. Quote it when contacting support.
+  error_field: error.meta.request_id
+
+versioning:
+  scheme: uri-path
+  current: v1
+  response_header: X-Api-Version
+  header_example: 'X-Api-Version: v1'
+  contract_version: 1.1.1
+  artifact: lifecycle/appsmax-rest-api-v1-lifecycle.yml
+
+caching:
+  policy: no-store
+  headers:
+    Cache-Control: 'no-store, private'
+    Pragma: no-cache
+  note: API responses must not be cached.
+
+rate_limits:
+  default: 60 requests per minute per token
+  per_token_override: true
+  visible_in: 'GET /me and the X-RateLimit-* response headers'
+  headers: [X-RateLimit-Limit, X-RateLimit-Remaining, Retry-After]
+  additional_limits: >-
+    Campaign creation (createCampaign) and campaign launch (runCampaign) carry separate,
+    tighter operation-level limits on top of the per-token limit.
+  on_429: >-
+    Pause and use exponential backoff; do not increase burst. Honour Retry-After.
+  docs: https://appsmax.ru/developers/#errors
+  source: openapi x-appsmax-default-rate-limit-per-minute + components.headers.RateLimit*
+
+scopes:
+  model: api-token scope strings (not OAuth 2.0)
+  count: 12
+  artifact: scopes/appsmax-rest-api-v1-scopes.yml
+  note: >-
+    A token created with no scope list technically receives full access within its
+    organization; AppsMax explicitly discourages that for new integrations.
+
+cross_links:
+  errors: errors/appsmax-rest-api-v1-problem-types.yml
+  lifecycle: lifecycle/appsmax-rest-api-v1-lifecycle.yml
+  authentication: authentication/appsmax-rest-api-v1-authentication.yml
+  scopes: scopes/appsmax-rest-api-v1-scopes.yml
+  conformance: conformance/appsmax-rest-api-v1-conformance.yml
+
+x-evidence:
+  fetched: '2026-08-09'
+  urls:
+    - url: https://appsmax.ru/developers/
+      http_status: 200
+    - url: https://appsmax.ru/developers/openapi.json
+      http_status: 200

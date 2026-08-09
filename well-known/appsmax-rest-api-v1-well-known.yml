@@ -1,0 +1,77 @@
+generated: '2026-08-09'
+method: probed
+source: live GET of the /.well-known/ surface on every apis.yml + OpenAPI servers[] host
+
+hosts:
+  - host: https://appsmax.ru
+    role: website + developer portal
+    documents:
+      - path: /.well-known/api-onboarding
+        status: 200
+        content_type: application/json
+        spec: API Onboarding Descriptor (AOD) 0.1
+        file: appsmax-rest-api-v1-api-onboarding.json
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /.well-known/mcp.json
+        status: 404
+
+  - host: https://telegram.appsmax.ru
+    role: API host (servers[0] = https://telegram.appsmax.ru/api/v1)
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /.well-known/mcp.json
+        status: 404
+
+notes: >-
+  Both hosts answer 404 with an HTML page for unknown /.well-known/ paths, so no SPA
+  catch-all false positive is possible here. The one real well-known document is the API
+  Onboarding Descriptor — AppsMax self-declares maturity "console-only": an account and an
+  organization are required, REST access is gated to the paid Profi plan, and token issuance
+  requires a signed-in human in the cabinet. There is no OAuth/OIDC discovery surface because
+  the API does not run OAuth. There is no /.well-known/api-catalog; the equivalent index is
+  published at the non-well-known path https://appsmax.ru/apis.json.
+
+gaps_declared_by_provider:
+  - API token creation, scope selection and revocation require a signed-in human using the AppsMax cabinet.
+  - No management API, dynamic client registration endpoint or machine onboarding flow for issuing API tokens.
+  - REST API access requires the Profi plan or an individual access right.
+
+x-evidence:
+  fetched: '2026-08-09'
+  urls:
+    - url: https://appsmax.ru/.well-known/api-onboarding
+      http_status: 200
+    - url: https://appsmax.ru/.well-known/security.txt
+      http_status: 404
+    - url: https://telegram.appsmax.ru/.well-known/api-catalog
+      http_status: 404

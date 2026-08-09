@@ -1,0 +1,79 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for AppsMax REST API v1
+  version: 1.0.0
+extends: openapi/appsmax-rest-api-v1-openapi-original.json
+x-generated: '2026-08-09'
+x-method: generated
+x-source: >-
+  Derived from the provider's own published contract plus https://appsmax.ru/developers/ and
+  https://appsmax.ru/.well-known/api-onboarding. This overlay records API Evangelist
+  enrichment only — it never mutates the harvested original.
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-slug: appsmax-rest-api-v1
+      x-apievangelist-enriched: '2026-08-09'
+      x-apievangelist-artifacts:
+        conventions: conventions/appsmax-rest-api-v1-conventions.yml
+        errors: errors/appsmax-rest-api-v1-problem-types.yml
+        scopes: scopes/appsmax-rest-api-v1-scopes.yml
+        authentication: authentication/appsmax-rest-api-v1-authentication.yml
+        lifecycle: lifecycle/appsmax-rest-api-v1-lifecycle.yml
+        data_model: data-model/appsmax-rest-api-v1-data-model.yml
+        conformance: conformance/appsmax-rest-api-v1-conformance.yml
+        agentic_access: agentic-access/appsmax-rest-api-v1-agentic-access.yml
+        skills: skills/_index.yml
+      x-apievangelist-onboarding:
+        descriptor: https://appsmax.ru/.well-known/api-onboarding
+        maturity: console-only
+        gated_to_plan: 'Profi (or an individual access right)'
+        token_issuance: human-in-the-cabinet only
+
+  - target: $.info
+    update:
+      x-apievangelist-error-envelope: 'application/json { error: { code, message, details, meta.request_id } } — not RFC 9457'
+
+  - target: $.paths['/applications'].post
+    update:
+      x-apievangelist-idempotency:
+        header: Idempotency-Key
+        conflict_status: 409
+        replay_status: 200
+        replay_header: Idempotency-Replayed
+      x-apievangelist-agent-note: >-
+        Creates a real customer request. Always send an Idempotency-Key so a network retry
+        does not duplicate the lead.
+
+  - target: $.paths['/campaigns'].post
+    update:
+      x-apievangelist-idempotency:
+        header: Idempotency-Key
+        conflict_status: 409
+        replay_status: 200
+        replay_header: Idempotency-Replayed
+      x-apievangelist-agent-note: >-
+        Creates a draft or scheduled campaign only. It does not send anything — launching is
+        a separate call to runCampaign.
+
+  - target: $.paths['/campaigns/{id}/run'].post
+    update:
+      x-apievangelist-consequence: high
+      x-apievangelist-human-in-the-loop: recommended
+      x-apievangelist-agent-note: >-
+        Sends messages to real recipients. The provider states that the existence of this
+        endpoint does not override the law, recipient consent, or the messenger's own rules;
+        bulk marketing into MAX private chats requires separate platform permission. No
+        Idempotency-Key is accepted here, so a blind retry can re-trigger a launch.
+
+  - target: $.paths['/subscribers'].post
+    update:
+      x-apievangelist-agent-note: >-
+        Naturally idempotent: creates or updates on the (bot_id, external_id) pair, so a retry
+        converges rather than duplicating. Returns 201 on create, 200 on update.
+
+  - target: $.paths['/ping'].get
+    update:
+      x-apievangelist-agent-note: >-
+        Still requires a valid token — this is not an anonymous health check. Use it, or
+        GET /me, as the first call of any integration to confirm token, scopes and rate limit.

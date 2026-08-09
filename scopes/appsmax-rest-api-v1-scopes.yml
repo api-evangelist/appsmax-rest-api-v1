@@ -1,0 +1,90 @@
+generated: '2026-08-09'
+method: searched
+source: https://appsmax.ru/developers/#scopes
+docs: https://appsmax.ru/developers/#scopes
+vocabulary_url: https://appsmax.ru/developers/#scopes
+corroborated_by: openapi/appsmax-rest-api-v1-openapi-original.json  # per-operation x-required-scope
+
+model:
+  type: api-token scope strings
+  oauth2: false
+  note: >-
+    AppsMax does NOT run OAuth 2.0. Scopes are selected by a signed-in human when creating an
+    organization-owned API token in the AppsMax cabinet (Data -> Integrations -> API). There is
+    no authorization endpoint, no token endpoint and no dynamic client registration.
+  default_when_empty: >-
+    A token created with no scope list technically receives full access within its organization.
+    AppsMax explicitly discourages this for new integrations — select the minimum required scopes.
+  tenancy: Every token is confined to its own AppsMax organization.
+  visibility: 'The scopes granted to the current token are readable at GET /me.'
+
+scopes:
+  - scope: organizations:read
+    description: Read the current organization.
+    description_ru: Читать текущую организацию.
+    operations: [listOrganizations]
+  - scope: bots:read
+    description: Read the bot list and individual bot records.
+    description_ru: Читать список и карточки ботов.
+    operations: [listBots, getBot]
+  - scope: connections:read
+    description: Read the state of a bot's channel connection.
+    description_ru: Читать состояние подключения бота к каналу.
+    operations: [listBotConnections]
+  - scope: miniapps:read
+    description: Read mini apps.
+    description_ru: Читать мини-приложения.
+    operations: [listMiniapps]
+  - scope: funnels:read
+    description: Read funnels and scenarios.
+    description_ru: Читать сценарии и воронки.
+    operations: [listFunnels]
+  - scope: interactive_menu:read
+    description: Read interactive menu items.
+    description_ru: Читать элементы интерактивного меню.
+    operations: [listInteractiveMenuItems]
+  - scope: applications:read
+    description: Read customer requests (applications).
+    description_ru: Читать заявки.
+    operations: [listApplications, getApplication]
+  - scope: applications:write
+    description: Create customer requests and sync their tags.
+    description_ru: Создавать заявки и синхронизировать их теги.
+    operations: [createApplication, syncApplicationTags]
+  - scope: campaigns:read
+    description: Read campaigns.
+    description_ru: Читать кампании.
+    operations: [listCampaigns, getCampaign]
+  - scope: campaigns:write
+    description: Create campaigns and separately launch them.
+    description_ru: Создавать и отдельно запускать кампании.
+    operations: [createCampaign, runCampaign]
+  - scope: subscribers:read
+    description: Read subscribers.
+    description_ru: Читать подписчиков.
+    operations: [listSubscribers, getSubscriber]
+  - scope: subscribers:write
+    description: Create or update subscribers.
+    description_ru: Создавать или обновлять подписчиков.
+    operations: [upsertSubscriber, updateSubscriber]
+
+unscoped_operations:
+  - operationId: ping
+    note: Requires a valid token but no scope.
+  - operationId: getCurrentApiContext
+    note: Requires a valid token but no scope; returns the token's own scopes and rate limit.
+
+summary:
+  scope_count: 12
+  read_scopes: 8
+  write_scopes: 4
+  operations_covered: 19
+  operations_unscoped: 2
+
+x-evidence:
+  fetched: '2026-08-09'
+  urls:
+    - url: https://appsmax.ru/developers/
+      http_status: 200
+    - url: https://appsmax.ru/.well-known/api-onboarding
+      http_status: 200

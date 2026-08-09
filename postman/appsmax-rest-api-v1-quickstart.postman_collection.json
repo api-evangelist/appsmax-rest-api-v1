@@ -1,0 +1,122 @@
+{
+  "info": {
+    "_postman_id": "9329c71d-e7da-445f-a310-a08e8bd1ca10",
+    "name": "AppsMax REST API v1 — Quickstart",
+    "description": "Два безопасных запроса чтения для первого знакомства с AppsMax REST API v1. Это API платформы AppsMax, а не официальный API MAX или Telegram. Перед запуском сохраните токен только в private current value переменной apiToken или в Postman Vault. Не публикуйте рабочий токен.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{apiToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://telegram.appsmax.ru/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "apiToken",
+      "value": "",
+      "type": "secret"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 — Проверить доступ",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/me",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "me"
+          ]
+        },
+        "description": "Возвращает организацию токена, scopes и фактический лимит. Ожидаемый результат с действующим токеном — 200 OK."
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Ответ 200 OK', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Ответ имеет JSON-формат', function () {",
+              "  pm.response.to.be.json;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 — Получить ботов MAX",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/bots?driver=max&per_page=50",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "bots"
+          ],
+          "query": [
+            {
+              "key": "driver",
+              "value": "max"
+            },
+            {
+              "key": "per_page",
+              "value": "50"
+            }
+          ]
+        },
+        "description": "Возвращает доступных организации ботов с каналом MAX. Нужен scope bots:read. Запрос не меняет данные."
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Ответ 200 OK', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Ответ имеет JSON-формат', function () {",
+              "  pm.response.to.be.json;",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

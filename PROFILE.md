@@ -35,6 +35,10 @@ AppsMax publishes an [API Onboarding Descriptor](https://appsmax.ru/.well-known/
 
 Every property advertised in the provider's APIs.json was fetched and confirmed reachable on 2026-08-01: documentation, OpenAPI, getting started, authentication, API onboarding, rate limits, pricing, terms of service, privacy policy, support and llms.txt.
 
-No MCP server (hosted or local), no agent skills, no llms-full.txt, no GraphQL, AsyncAPI or Postman collection, and no official SDK. Outbound webhooks exist in the cabinet but their contract is not part of the public reference.
+No MCP server (hosted or local), no llms-full.txt, no GraphQL or AsyncAPI, and no official SDK — the provider asserts the SDK gap machine-readably as `x-appsmax-public-sdk: false`. Outbound webhooks exist in the cabinet but their contract is not part of the public reference (`x-appsmax-webhooks-covered: false`). No status page, no dated API changelog, no `/.well-known/security.txt`, and no OAuth — scopes are attached to console-issued API tokens.
+
+The provider does publish a public reference repository on GitVerse — [appsmax/appsmax-api-reference](https://gitverse.ru/appsmax/appsmax-api-reference) — carrying the OpenAPI contract, safe curl examples, a two-request **Postman quickstart collection**, a real `SECURITY.md` vulnerability-reporting policy, and a `NOTICE.md`.
+
+_Re-verified 2026-08-09: the live contract is now OpenAPI 3.0.3 v1.1.1, self-stamped `x-appsmax-verified-at: 2026-08-09`, still 17 paths / 21 operations, with 12 documented scopes, `Idempotency-Key` on the two create operations, `X-Request-Id` / `X-Api-Version` on every response, and a 60 req/min default per token._
 
 _Built from the provider's own APIs.json at https://appsmax.ru/apis.json (apis.io submission 449f5bad-f495-4073-938a-4da9a1e356c7)._

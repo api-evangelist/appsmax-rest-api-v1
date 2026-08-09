@@ -1,0 +1,50 @@
+generated: '2026-08-09'
+method: searched
+source: https://gitverse.ru/appsmax/appsmax-api-reference
+
+note: >-
+  The AppsMax OpenAPI itself carries NO in-spec examples — zero of the 21 operations declares an
+  example or examples object. The provider publishes its request examples out-of-band instead,
+  in its public reference repository on GitVerse. Both files below are saved verbatim.
+
+examples:
+  - file: appsmax-rest-api-v1-curl-examples.md
+    format: markdown + curl
+    name: Примеры запросов к AppsMax REST API v1
+    source: https://gitverse.ru/appsmax/appsmax-api-reference
+    covers:
+      - getCurrentApiContext   # GET /me
+      - listBots               # GET /bots?driver=max&per_page=50
+      - createApplication      # POST /applications
+      - syncApplicationTags    # POST /applications/{application}/tags
+      - createCampaign         # POST /campaigns
+      - runCampaign            # POST /campaigns/{id}/run
+    safety: >-
+      All values in the file are fictional by the provider's own statement; contacts use
+      +70000000000 and test@example.invalid. Placeholders YOUR_API_TOKEN and BOT_ID must be
+      replaced with the caller's own organization values.
+
+  - file: ../postman/appsmax-rest-api-v1-quickstart.postman_collection.json
+    format: Postman Collection v2.1.0
+    name: 'AppsMax REST API v1 — Quickstart'
+    source: https://gitverse.ru/appsmax/appsmax-api-reference
+    requests: 2
+    covers:
+      - getCurrentApiContext
+      - listBots
+    auth: bearer via a {{apiToken}} collection variable typed as secret, shipped empty
+    tests: Each request asserts HTTP 200 and a JSON response.
+    safety: >-
+      The collection carries no working token. The provider instructs importers to keep the
+      token in Postman's private current value or in Postman Vault and never to publish an
+      environment or a fork with the token filled in.
+
+gap: >-
+  Adding examples inline to the OpenAPI (request/response examples per operation) would make
+  these machine-readable to a code generator or an agent rather than human-readable only.
+
+x-evidence:
+  fetched: '2026-08-09'
+  urls:
+    - url: https://gitverse.ru/appsmax/appsmax-api-reference
+      http_status: 200

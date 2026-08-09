@@ -1,0 +1,92 @@
+{
+  "aod": "0.1",
+  "provider": {
+    "name": "AppsMax.ru",
+    "url": "https://appsmax.ru/",
+    "portalUrl": "https://appsmax.ru/developers/",
+    "apisJsonUrl": "https://appsmax.ru/apis.json"
+  },
+  "maturity": "console-only",
+  "account": {
+    "required": true,
+    "signupUrl": "https://telegram.appsmax.ru/register",
+    "agentPolicy": "unspecified",
+    "prerequisites": [
+      "A registered AppsMax account with an organization",
+      "The AppsMax Profi plan or an individual REST API access right"
+    ],
+    "plans": [
+      {
+        "name": "Profi",
+        "requiredFor": "REST API access under the published AppsMax tariff",
+        "url": "https://appsmax.ru/pricing/"
+      }
+    ],
+    "termsOfService": {
+      "url": "https://appsmax.ru/documents/publichnaya-oferta/",
+      "acceptance": "console-only"
+    }
+  },
+  "verification": [],
+  "registration": {
+    "applicationNoun": "API token",
+    "owner": "organization",
+    "mechanisms": [
+      {
+        "type": "console-only",
+        "description": "A signed-in user opens Data -> Integrations -> API in the AppsMax cabinet, selects the minimum required scopes and creates the token. AppsMax does not currently publish a programmatic token-issuance endpoint.",
+        "docsUrls": [
+          "https://appsmax.ru/developers/#quick-start",
+          "https://appsmax.ru/developers/#authentication"
+        ],
+        "auth": "appsmax-api-token"
+      }
+    ]
+  },
+  "authentication": {
+    "methods": [
+      {
+        "id": "appsmax-api-token",
+        "type": "bearer-env",
+        "env": [
+          "APPSMAX_API_TOKEN"
+        ],
+        "bootstrap": "Sign in to the AppsMax cabinet, open Data -> Integrations -> API, select the required scopes, create a token and copy the value when it is shown."
+      },
+      {
+        "id": "appsmax-api-token-header",
+        "type": "header-env",
+        "header": "X-Api-Token",
+        "env": [
+          "APPSMAX_API_TOKEN"
+        ],
+        "bootstrap": "Create the token in the AppsMax cabinet first; X-Api-Token is the fallback header for clients that cannot send Bearer authentication."
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "type": "api-key",
+      "fields": {
+        "api_key": "AppsMax API token"
+      },
+      "rotation": "Revoke the existing token in the AppsMax cabinet and create a replacement token with the required scopes.",
+      "oneTimeDisplay": true
+    }
+  ],
+  "scopes": {
+    "model": "scope-strings",
+    "vocabularyUrl": "https://appsmax.ru/developers/#scopes",
+    "notes": "Tokens are limited to their AppsMax organization. New integrations should use the minimum required read or write scopes."
+  },
+  "economics": {
+    "pricingUrl": "https://appsmax.ru/pricing/",
+    "freeTier": "The permanent Start plan does not include REST API access. REST API is included in the Profi plan or enabled through an individual access right.",
+    "rateLimitsUrl": "https://appsmax.ru/developers/#errors"
+  },
+  "gaps": [
+    "API token creation, scope selection and revocation require a signed-in human using the AppsMax cabinet.",
+    "AppsMax does not currently publish a management API, dynamic client registration endpoint or machine onboarding flow for issuing API tokens.",
+    "REST API access requires the Profi plan or an individual access right."
+  ]
+}

@@ -1,0 +1,220 @@
+generated: '2026-08-09'
+method: derived
+source: openapi/appsmax-rest-api-v1-openapi-original.json
+note: >-
+  Derived from components.schemas $ref links and integer id-reference fields
+  (organization_id, bot_id, parent_id). Identifiers are plain integers — there is no
+  prefixed-id scheme. Every object is scoped to one organization; a token never sees
+  another organization's rows.
+
+root_entity: Organization
+
+entities:
+  - name: Organization
+    schema: Organization
+    id: id
+    id_type: integer
+    key_fields: [id, name, slug]
+    operations: [listOrganizations]
+    description: The tenant. Every other object hangs off it, directly or through a Bot.
+
+  - name: ApiTokenContext
+    schema: ApiTokenContext
+    id: id
+    id_type: integer
+    key_fields: [id, name, scopes, rate_limit, last_used_at]
+    operations: [getCurrentApiContext]
+    description: >-
+      The calling token itself — its name, granted scopes, effective rate limit and last use.
+      Returned alongside the Organization by GET /me.
+
+  - name: Bot
+    schema: Bot
+    id: id
+    id_type: integer
+    alt_id: public_id
+    key_fields: [id, organization_id, name, status, driver]
+    operations: [listBots, getBot]
+    filters: [driver, status]
+    description: >-
+      A bot inside an organization. driver identifies the channel family (max, telegram).
+      The Bot is the pivot entity — miniapps, funnels, menu items, applications, campaigns
+      and subscribers all reference bot_id.
+
+  - name: BotConnection
+    schema: BotConnection
+    id: bot_id
+    id_type: integer
+    key_fields: [bot_id, driver, status, identifier, last_synced_at]
+    operations: [listBotConnections]
+    description: The bot's live binding to a messenger channel, with a driver-specific profile.
+
+  - name: TelegramBotConnectionProfile
+    schema: TelegramBotConnectionProfile
+    embedded_in: BotConnection.profile
+    description: Telegram-flavoured connection profile (username, capability flags).
+
+  - name: MaxBotConnectionProfile
+    schema: MaxBotConnectionProfile
+    embedded_in: BotConnection.profile
+    description: MAX-flavoured connection profile (user_id, name, username).
+
+  - name: Miniapp
+    schema: Miniapp
+    id: id
+    id_type: integer
+    key_fields: [id, bot_id, name, slug, status, published_at]
+    operations: [listMiniapps]
+    filters: [bot_id, status]
+
+  - name: Funnel
+    schema: Funnel
+    id: id
+    id_type: integer
+    key_fields: [id, bot_id, title, is_active, start_block_id, version]
+    operations: [listFunnels]
+    filters: [bot_id, active]
+
+  - name: InteractiveMenuItem
+    schema: InteractiveMenuItem
+    id: id
+    id_type: integer
+    key_fields: [id, bot_id, parent_id, title, active, sort_order]
+    operations: [listInteractiveMenuItems]
+    filters: [bot_id, active]
+    description: >-
+      Self-referencing tree — parent_id points at another InteractiveMenuItem. Also carries
+      soft references survey_template_id and linked_command_id, whose target objects are not
+      exposed by the public v1 API.
+
+  - name: Application
+    schema: Application
+    id: id
+    id_type: integer
+    key_fields: [id, bot_id, organization_id, number, source, status, contact, answers, tags]
+    operations: [listApplications, createApplication, getApplication, syncApplicationTags]
+    writable: true
+    description: >-
+      A customer request (заявка). Created with bot_id required; the top-level status field
+      is not accepted on create — AppsMax assigns the initial status.
+
+  - name: ApplicationTag
+    schema: ApplicationTag
+    id: id
+    id_type: integer
+    key_fields: [id, name, slug]
+    operations: [syncApplicationTags]
+    description: Up to 20 non-empty tags synced onto an Application in one call.
+
+  - name: Campaign
+    schema: Campaign
+    id: id
+    id_type: integer
+    key_fields: [id, organization_id, bot_id, name, status, type, scheduled_at]
+    counters: [recipients, delivered, failed, pending]
+    operations: [listCampaigns, createCampaign, getCampaign, runCampaign]
+    writable: true
+    description: >-
+      A broadcast. Creation and launch are two distinct operations — createCampaign produces
+      a draft or scheduled record, runCampaign moves it into launch/scheduling.
+
+  - name: Subscriber
+    schema: Subscriber
+    id: id
+    id_type: integer
+    natural_key: [bot_id, external_id]
+    key_fields: [id, organization_id, bot_id, channel, external_id, status, tags, groups]
+    operations: [listSubscribers, upsertSubscriber, getSubscriber, updateSubscriber]
+    writable: true
+    description: >-
+      A channel-side person. upsertSubscriber creates or updates on the (bot_id, external_id)
+      pair, which makes it naturally idempotent without an Idempotency-Key.
+
+relationships:
+  - from: Organization
+    to: Bot
+    type: has_many
+    via: Bot.organization_id
+  - from: Bot
+    to: Organization
+    type: belongs_to
+    via: Bot.organization_id
+  - from: Bot
+    to: BotConnection
+    type: has_many
+    via: BotConnection.bot_id
+  - from: BotConnection
+    to: TelegramBotConnectionProfile
+    type: has_one
+    via: BotConnection.profile
+    condition: driver = telegram
+  - from: BotConnection
+    to: MaxBotConnectionProfile
+    type: has_one
+    via: BotConnection.profile
+    condition: driver = max
+  - from: Bot
+    to: Miniapp
+    type: has_many
+    via: Miniapp.bot_id
+  - from: Bot
+    to: Funnel
+    type: has_many
+    via: Funnel.bot_id
+  - from: Bot
+    to: InteractiveMenuItem
+    type: has_many
+    via: InteractiveMenuItem.bot_id
+  - from: InteractiveMenuItem
+    to: InteractiveMenuItem
+    type: has_many
+    via: InteractiveMenuItem.parent_id
+    note: self-referencing menu tree
+  - from: Bot
+    to: Application
+    type: has_many
+    via: Application.bot_id
+  - from: Organization
+    to: Application
+    type: has_many
+    via: Application.organization_id
+  - from: Application
+    to: ApplicationTag
+    type: has_many
+    via: Application.tags
+  - from: Bot
+    to: Campaign
+    type: has_many
+    via: Campaign.bot_id
+  - from: Organization
+    to: Campaign
+    type: has_many
+    via: Campaign.organization_id
+  - from: Bot
+    to: Subscriber
+    type: has_many
+    via: Subscriber.bot_id
+  - from: Organization
+    to: Subscriber
+    type: has_many
+    via: Subscriber.organization_id
+
+envelopes:
+  resource: ResourceEnvelope   # { data: {} }
+  collection: CollectionEnvelope  # { data: [], links: {}, meta: {} }
+
+dangling_references:
+  - field: InteractiveMenuItem.survey_template_id
+    note: No survey-template resource is exposed by the public v1 API.
+  - field: InteractiveMenuItem.linked_command_id
+    note: No command resource is exposed by the public v1 API.
+  - field: Funnel.start_block_id
+    note: No funnel-block resource is exposed by the public v1 API.
+  - field: Subscriber.groups
+    note: Groups appear as an array on the subscriber; there is no groups collection endpoint.
+
+summary:
+  entities: 13
+  relationships: 17
+  writable_entities: [Application, Campaign, Subscriber]
+  read_only_entities: [Organization, ApiTokenContext, Bot, BotConnection, Miniapp, Funnel, InteractiveMenuItem]

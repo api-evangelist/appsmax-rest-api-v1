@@ -25,7 +25,7 @@ type: Index
 kind: company
 specificationVersion: '0.21'
 created: '2026-07-31'
-modified: '2026-08-01'
+modified: '2026-08-09'
 x-type: company
 x-source: apis.io/add submission 449f5bad-f495-4073-938a-4da9a1e356c7
 x-evidence:
@@ -51,8 +51,10 @@ apis:
       Server-to-server API for managing AppsMax organizations, bots, connections, mini apps, funnels, interactive menus,
       customer requests, campaigns and subscribers. 17 paths and 21 operations across the Access, Organizations, Bots,
       Miniapps, Funnels, Interactive menu, Applications, Campaigns and Subscribers tags. Authenticated with an
-      organization-owned API token, sent as an Authorization Bearer header or an X-Api-Token fallback header, with
-      scope-based access. This is the AppsMax platform API, not an official API of MAX or Telegram.
+      organization-owned API token, sent as an Authorization Bearer header or an X-Api-Token fallback header, with 12
+      documented scopes. Idempotency-Key is supported on the two create operations, every response carries X-Request-Id
+      and X-Api-Version, and the default limit is 60 requests per minute per token. This is the AppsMax platform API,
+      not an official API of MAX or Telegram.
     image: https://appsmax.ru/wp-content/themes/appsmax-site/assets/img/logo-appsmax.svg
     humanURL: https://appsmax.ru/developers/
     baseURL: https://telegram.appsmax.ru/api/v1
@@ -75,6 +77,10 @@ apis:
       - type: OpenAPI
         mediaType: application/vnd.oai.openapi+json;version=3.0
         url: https://appsmax.ru/developers/openapi.json
+      - type: OpenAPI
+        name: AppsMax REST API v1 — harvested contract (OpenAPI 3.0.3, v1.1.1)
+        mediaType: application/vnd.oai.openapi+json;version=3.0
+        url: openapi/appsmax-rest-api-v1-openapi-original.json
       - type: GettingStarted
         url: https://appsmax.ru/developers/#quick-start
       - type: Authentication
@@ -95,11 +101,80 @@ apis:
       - type: LLMSTxt
         url: https://appsmax.ru/llms.txt
 common:
+  - type: AgenticAccess
+    url: agentic-access/appsmax-rest-api-v1-agentic-access.yml
+  - type: DomainSecurity
+    url: security/appsmax-rest-api-v1-domain-security.yml
+  - type: Authentication
+    url: authentication/appsmax-rest-api-v1-authentication.yml
   - type: Website
     url: https://appsmax.ru/
   - type: APIsJSON
     url: https://appsmax.ru/apis.json
+  - type: DeveloperPortal
+    url: https://appsmax.ru/developers/
+  - type: APIReference
+    url: https://appsmax.ru/developers/#methods
+  - type: Blog
+    url: https://appsmax.ru/news/
+  - type: BlogRSS
+    url: https://appsmax.ru/news/feed/
+  - type: SignUp
+    url: https://telegram.appsmax.ru/register
+  - type: Login
+    url: https://telegram.appsmax.ru/login
+  - type: HelpCenter
+    url: https://appsmax.ru/kb/
+  - type: FAQ
+    url: https://appsmax.ru/faq/
+  - type: SourceCode
+    name: AppsMax REST API v1 public reference (GitVerse)
+    url: https://gitverse.ru/appsmax/appsmax-api-reference
+  - type: Postman
+    name: AppsMax REST API v1 — Quickstart collection
+    url: https://gitverse.ru/appsmax/appsmax-api-reference
+  - type: Conventions
+    url: conventions/appsmax-rest-api-v1-conventions.yml
+  - type: Idempotency
+    url: conventions/appsmax-rest-api-v1-conventions.yml
+  - type: ErrorCatalog
+    url: errors/appsmax-rest-api-v1-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/appsmax-rest-api-v1-lifecycle.yml
+  - type: Scopes
+    url: scopes/appsmax-rest-api-v1-scopes.yml
+  - type: Conformance
+    url: conformance/appsmax-rest-api-v1-conformance.yml
+  - type: DataModel
+    url: data-model/appsmax-rest-api-v1-data-model.yml
+  - type: Packages
+    url: packages/appsmax-rest-api-v1-packages.yml
+  - type: WellKnown
+    url: well-known/appsmax-rest-api-v1-well-known.yml
+  - type: LLMsTxt
+    url: llms/appsmax-rest-api-v1-llms.txt
+  - type: Overlay
+    url: overlays/appsmax-rest-api-v1-rest-api-v1-overlay.yaml
+  - type: Examples
+    url: examples/_index.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: RateLimits
+    url: rate-limits/appsmax-rest-api-v1-rate-limits.yml
+  - type: Plans
+    url: plans/appsmax-rest-api-v1-plans.yml
+  - type: VulnerabilityDisclosure
+    url: security/appsmax-rest-api-v1-vulnerability-disclosure.yml
+  - type: Security
+    name: AppsMax SECURITY.md — token handling and vulnerability reporting
+    url: https://gitverse.ru/appsmax/appsmax-api-reference
 maintainers:
   - FN: AppsMax.ru team
     email: info@appsmax.ru
     url: https://appsmax.ru/developers/
+
+x-enrichment:
+  date: '2026-08-09'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v1

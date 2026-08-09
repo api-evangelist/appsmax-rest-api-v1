@@ -1,0 +1,166 @@
+generated: '2026-08-09'
+method: derived
+status: candidate
+source: openapi/appsmax-rest-api-v1-openapi-original.json
+
+search_result:
+  official_server: false
+  searched:
+    - url: https://appsmax.ru/developers/
+      http_status: 200
+      finding: No MCP server documented.
+    - url: https://appsmax.ru/apis.json
+      http_status: 200
+      finding: No MCPServer property in the provider's own APIs.json index.
+    - url: https://appsmax.ru/llms.txt
+      http_status: 200
+      finding: No MCP endpoint or tool list.
+    - url: https://appsmax.ru/.well-known/mcp.json
+      http_status: 404
+    - url: https://telegram.appsmax.ru/.well-known/mcp.json
+      http_status: 404
+    - registry: npm
+      query: appsmax
+      results: 0
+  conclusion: >-
+    AppsMax publishes no hosted or local MCP server. The tools below are a CANDIDATE mapping
+    derived one-to-one from the published OpenAPI operations — they are not an AppsMax product
+    and are not deployed anywhere. Each tool's real input contract is the referenced
+    operation's parameters and requestBody in the spec.
+
+server:
+  name: appsmax
+  transport: http
+  url: null
+  auth:
+    type: bearer
+    header: Authorization
+    env: APPSMAX_API_TOKEN
+    fallback_header: X-Api-Token
+    note: >-
+      An MCP server for AppsMax would carry an organization-owned API token issued by a human
+      in the AppsMax cabinet — there is no programmatic token issuance, so the server cannot
+      self-provision credentials.
+
+tools:
+  - name: ping
+    description: Verify the token and its organization context.
+    scope: null
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#ping
+  - name: get_current_api_context
+    description: Return the token, its scopes, its rate limit and its organization.
+    scope: null
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#getCurrentApiContext
+  - name: list_organizations
+    description: Read the current organization.
+    scope: organizations:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#listOrganizations
+  - name: list_bots
+    description: List bots, filtered by driver and status.
+    scope: bots:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#listBots
+  - name: get_bot
+    description: Read one bot in the token's organization.
+    scope: bots:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#getBot
+  - name: list_bot_connections
+    description: Read a bot's channel, status and connection profile.
+    scope: connections:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#listBotConnections
+  - name: list_miniapps
+    description: List mini apps, filtered by bot_id and status.
+    scope: miniapps:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#listMiniapps
+  - name: list_funnels
+    description: List funnels and scenarios, filtered by bot_id and active.
+    scope: funnels:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#listFunnels
+  - name: list_interactive_menu_items
+    description: List interactive menu items, filtered by bot_id and active.
+    scope: interactive_menu:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#listInteractiveMenuItems
+  - name: list_applications
+    description: List customer requests with bot, status, source, tag and date filters.
+    scope: applications:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#listApplications
+  - name: create_application
+    description: Create a customer request. bot_id is required.
+    scope: applications:write
+    write: true
+    idempotency_key: supported
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#createApplication
+  - name: get_application
+    description: Read one customer request.
+    scope: applications:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#getApplication
+  - name: sync_application_tags
+    description: Sync up to 20 non-empty tags onto a customer request.
+    scope: applications:write
+    write: true
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#syncApplicationTags
+  - name: list_campaigns
+    description: List campaigns with bot, status, type, date and search filters.
+    scope: campaigns:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#listCampaigns
+  - name: create_campaign
+    description: Create a draft or scheduled campaign. Does not launch it.
+    scope: campaigns:write
+    write: true
+    idempotency_key: supported
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#createCampaign
+  - name: get_campaign
+    description: Read one campaign and its content.
+    scope: campaigns:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#getCampaign
+  - name: run_campaign
+    description: Move a campaign draft into launch or scheduling.
+    scope: campaigns:write
+    write: true
+    consequence: high
+    human_in_the_loop: recommended
+    note: >-
+      Sends messages to real people. AppsMax states explicitly that the existence of this
+      endpoint does not override the law, recipient consent, or the messenger's own rules —
+      bulk marketing into MAX private chats needs separate platform permission. An agent
+      should not call this without an explicit human decision.
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#runCampaign
+  - name: list_subscribers
+    description: List subscribers with channel, status, bot, tag, group and date filters.
+    scope: subscribers:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#listSubscribers
+  - name: upsert_subscriber
+    description: Create or update a subscriber on the (bot_id, external_id) pair.
+    scope: subscribers:write
+    write: true
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#upsertSubscriber
+  - name: get_subscriber
+    description: Read one subscriber.
+    scope: subscribers:read
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#getSubscriber
+  - name: update_subscriber
+    description: Update a subscriber's channel, status, name, username or tags.
+    scope: subscribers:write
+    write: true
+    source_operation: openapi/appsmax-rest-api-v1-openapi-original.json#updateSubscriber
+
+coverage:
+  rest_operations: 21
+  candidate_tools: 21
+  unmapped_operations: 0
+
+agent_guidance:
+  rate_limit: 60 requests/minute per token by default; campaign create and run are limited further.
+  retries: Honour Retry-After on 429 and back off exponentially; do not increase burst.
+  idempotency: >-
+    Send an Idempotency-Key on create_application and create_campaign so a retry does not
+    duplicate a customer request or a broadcast.
+  errors: See errors/appsmax-rest-api-v1-problem-types.yml — branch on error.code, not the message.
+  scopes: See scopes/appsmax-rest-api-v1-scopes.yml — grant read-only scopes unless a write flow is intended.
+
+x-evidence:
+  fetched: '2026-08-09'
+  urls:
+    - url: https://appsmax.ru/developers/
+      http_status: 200
+    - url: https://appsmax.ru/.well-known/mcp.json
+      http_status: 404

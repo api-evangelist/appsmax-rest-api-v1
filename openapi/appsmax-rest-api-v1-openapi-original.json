@@ -1,0 +1,1401 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "AppsMax REST API",
+    "version": "1.1.1",
+    "description": "Публичный server-to-server контракт REST API AppsMax v1. Это API платформы AppsMax, а не официальный API MAX или Telegram. Все ответы API имеют JSON-формат, X-Request-Id и запрет кеширования. Проверено по production-маршрутам, валидации и synthetic acceptance 2026-08-09.",
+    "contact": {
+      "name": "AppsMax",
+      "url": "https://appsmax.ru/contacts/",
+      "email": "info@appsmax.ru"
+    },
+    "license": {
+      "name": "AppsMax API Terms",
+      "url": "https://appsmax.ru/documents/"
+    }
+  },
+  "externalDocs": {
+    "description": "Документация и ограничения",
+    "url": "https://appsmax.ru/developers/"
+  },
+  "servers": [
+    {
+      "url": "https://telegram.appsmax.ru/api/v1",
+      "description": "Production API v1"
+    }
+  ],
+  "security": [
+    { "bearerAuth": [] },
+    { "apiTokenHeader": [] }
+  ],
+  "tags": [
+    { "name": "Access", "description": "Проверка токена и контекста организации." },
+    { "name": "Organizations", "description": "Организация, к которой привязан токен." },
+    { "name": "Bots", "description": "Боты и их безопасные сведения о подключении без секретов." },
+    { "name": "Miniapps", "description": "Мини-приложения организации." },
+    { "name": "Funnels", "description": "Сценарии и воронки ботов." },
+    { "name": "Interactive menu", "description": "Элементы интерактивного меню ботов." },
+    { "name": "Applications", "description": "Заявки и их теги." },
+    { "name": "Campaigns", "description": "Рассылки и их запуск." },
+    { "name": "Subscribers", "description": "Подписчики и их сегментационные теги." }
+  ],
+  "paths": {
+    "/ping": {
+      "get": {
+        "operationId": "ping",
+        "tags": ["Access"],
+        "summary": "Проверить API-токен",
+        "description": "Требует действующий токен, но не требует отдельного scope.",
+        "responses": {
+          "200": {
+            "description": "Токен принят.",
+            "headers": {
+              "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+              "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+              "Cache-Control": { "$ref": "#/components/headers/CacheControl" },
+              "Pragma": { "$ref": "#/components/headers/Pragma" }
+            },
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PingResponse" } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "operationId": "getCurrentApiContext",
+        "tags": ["Access"],
+        "summary": "Получить токен и организацию",
+        "description": "Возвращает scopes и фактический rate limit токена. Отдельный scope не требуется.",
+        "responses": {
+          "200": { "$ref": "#/components/responses/Me" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/organizations": {
+      "get": {
+        "operationId": "listOrganizations",
+        "tags": ["Organizations"],
+        "summary": "Получить текущую организацию",
+        "x-required-scope": "organizations:read",
+        "responses": {
+          "200": { "$ref": "#/components/responses/Organizations" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/bots": {
+      "get": {
+        "operationId": "listBots",
+        "tags": ["Bots"],
+        "summary": "Получить ботов",
+        "x-required-scope": "bots:read",
+        "parameters": [
+          { "$ref": "#/components/parameters/Driver" },
+          { "$ref": "#/components/parameters/StatusSingle" },
+          { "$ref": "#/components/parameters/PerPage100" },
+          { "$ref": "#/components/parameters/Page" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Bots" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/bots/{bot}": {
+      "get": {
+        "operationId": "getBot",
+        "tags": ["Bots"],
+        "summary": "Получить бота",
+        "x-required-scope": "bots:read",
+        "parameters": [{ "$ref": "#/components/parameters/BotPath" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Bot" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/bots/{bot}/connections": {
+      "get": {
+        "operationId": "listBotConnections",
+        "tags": ["Bots"],
+        "summary": "Получить подключения бота",
+        "x-required-scope": "connections:read",
+        "parameters": [{ "$ref": "#/components/parameters/BotPath" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/BotConnections" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/miniapps": {
+      "get": {
+        "operationId": "listMiniapps",
+        "tags": ["Miniapps"],
+        "summary": "Получить мини-приложения",
+        "x-required-scope": "miniapps:read",
+        "parameters": [
+          { "$ref": "#/components/parameters/BotIdQuery" },
+          { "$ref": "#/components/parameters/StatusSingle" },
+          { "$ref": "#/components/parameters/PerPage100" },
+          { "$ref": "#/components/parameters/Page" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Miniapps" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/funnels": {
+      "get": {
+        "operationId": "listFunnels",
+        "tags": ["Funnels"],
+        "summary": "Получить сценарии",
+        "x-required-scope": "funnels:read",
+        "parameters": [
+          { "$ref": "#/components/parameters/BotIdQuery" },
+          { "$ref": "#/components/parameters/Active" },
+          { "$ref": "#/components/parameters/PerPage100" },
+          { "$ref": "#/components/parameters/Page" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Funnels" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/interactive-menu": {
+      "get": {
+        "operationId": "listInteractiveMenuItems",
+        "tags": ["Interactive menu"],
+        "summary": "Получить элементы интерактивного меню",
+        "x-required-scope": "interactive_menu:read",
+        "parameters": [
+          { "$ref": "#/components/parameters/BotIdQuery" },
+          { "$ref": "#/components/parameters/Active" },
+          { "$ref": "#/components/parameters/PerPage200" },
+          { "$ref": "#/components/parameters/Page" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/InteractiveMenu" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/applications": {
+      "get": {
+        "operationId": "listApplications",
+        "tags": ["Applications"],
+        "summary": "Получить заявки",
+        "x-required-scope": "applications:read",
+        "parameters": [
+          { "$ref": "#/components/parameters/BotIdQuery" },
+          { "$ref": "#/components/parameters/StatusArray" },
+          { "$ref": "#/components/parameters/SourceArray" },
+          { "$ref": "#/components/parameters/CreatedFrom" },
+          { "$ref": "#/components/parameters/CreatedTo" },
+          { "$ref": "#/components/parameters/Tag" },
+          { "$ref": "#/components/parameters/PerPage100" },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["created_at", "submitted_at"], "default": "created_at" }
+          },
+          { "$ref": "#/components/parameters/Direction" },
+          { "$ref": "#/components/parameters/Page" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Applications" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      },
+      "post": {
+        "operationId": "createApplication",
+        "tags": ["Applications"],
+        "summary": "Создать заявку",
+        "description": "bot_id обязателен. Верхнеуровневое поле status не поддерживается; AppsMax назначает новой заявке начальный статус.",
+        "x-required-scope": "applications:write",
+        "parameters": [{ "$ref": "#/components/parameters/IdempotencyKey" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApplicationCreateRequest" } } }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/ApplicationReplay" },
+          "201": { "$ref": "#/components/responses/ApplicationCreated" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "409": { "$ref": "#/components/responses/Conflict" },
+          "413": { "$ref": "#/components/responses/PayloadTooLarge" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/applications/{id}": {
+      "get": {
+        "operationId": "getApplication",
+        "tags": ["Applications"],
+        "summary": "Получить заявку",
+        "x-required-scope": "applications:read",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Application" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/applications/{application}/tags": {
+      "post": {
+        "operationId": "syncApplicationTags",
+        "tags": ["Applications"],
+        "summary": "Синхронизировать теги заявки",
+        "x-required-scope": "applications:write",
+        "parameters": [{ "$ref": "#/components/parameters/ApplicationPath" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApplicationTagsRequest" } } }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/Application" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "413": { "$ref": "#/components/responses/PayloadTooLarge" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/campaigns": {
+      "get": {
+        "operationId": "listCampaigns",
+        "tags": ["Campaigns"],
+        "summary": "Получить кампании",
+        "x-required-scope": "campaigns:read",
+        "parameters": [
+          { "$ref": "#/components/parameters/BotIdQuery" },
+          { "$ref": "#/components/parameters/StatusArray" },
+          { "$ref": "#/components/parameters/TypeArray" },
+          { "$ref": "#/components/parameters/CreatedFrom" },
+          { "$ref": "#/components/parameters/CreatedTo" },
+          { "$ref": "#/components/parameters/Search" },
+          { "$ref": "#/components/parameters/PerPage100" },
+          { "$ref": "#/components/parameters/SortCreatedAt" },
+          { "$ref": "#/components/parameters/Direction" },
+          { "$ref": "#/components/parameters/Page" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Campaigns" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      },
+      "post": {
+        "operationId": "createCampaign",
+        "tags": ["Campaigns"],
+        "summary": "Создать кампанию",
+        "description": "Создаёт черновик или запланированную запись. Для запуска используется отдельный POST /campaigns/{id}/run.",
+        "x-required-scope": "campaigns:write",
+        "parameters": [{ "$ref": "#/components/parameters/IdempotencyKey" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CampaignCreateRequest" } } }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/CampaignReplay" },
+          "201": { "$ref": "#/components/responses/CampaignCreated" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "409": { "$ref": "#/components/responses/Conflict" },
+          "413": { "$ref": "#/components/responses/PayloadTooLarge" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/campaigns/{campaign}": {
+      "get": {
+        "operationId": "getCampaign",
+        "tags": ["Campaigns"],
+        "summary": "Получить кампанию",
+        "x-required-scope": "campaigns:read",
+        "parameters": [{ "$ref": "#/components/parameters/CampaignPath" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Campaign" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/campaigns/{id}/run": {
+      "post": {
+        "operationId": "runCampaign",
+        "tags": ["Campaigns"],
+        "summary": "Запустить кампанию",
+        "description": "Переводит черновик в состояние запуска/планирования. Перед вызовом интегратор отвечает за аудиторию, согласия, содержание и правила канала.",
+        "x-required-scope": "campaigns:write",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Campaign" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "413": { "$ref": "#/components/responses/PayloadTooLarge" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/subscribers": {
+      "get": {
+        "operationId": "listSubscribers",
+        "tags": ["Subscribers"],
+        "summary": "Получить подписчиков",
+        "x-required-scope": "subscribers:read",
+        "parameters": [
+          { "$ref": "#/components/parameters/ChannelArray" },
+          { "$ref": "#/components/parameters/StatusArray" },
+          { "$ref": "#/components/parameters/BotIdQuery" },
+          { "$ref": "#/components/parameters/Tag" },
+          { "$ref": "#/components/parameters/GroupId" },
+          { "$ref": "#/components/parameters/Search" },
+          { "$ref": "#/components/parameters/CreatedFrom" },
+          { "$ref": "#/components/parameters/CreatedTo" },
+          { "$ref": "#/components/parameters/PerPage100" },
+          { "$ref": "#/components/parameters/SortCreatedAt" },
+          { "$ref": "#/components/parameters/Direction" },
+          { "$ref": "#/components/parameters/Page" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Subscribers" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      },
+      "post": {
+        "operationId": "upsertSubscriber",
+        "tags": ["Subscribers"],
+        "summary": "Создать или обновить подписчика",
+        "description": "Операция выполняет upsert по bot_id и external_id.",
+        "x-required-scope": "subscribers:write",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SubscriberCreateRequest" } } }
+        },
+        "responses": {
+          "201": { "$ref": "#/components/responses/Subscriber" },
+          "200": { "$ref": "#/components/responses/Subscriber" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "413": { "$ref": "#/components/responses/PayloadTooLarge" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/subscribers/{id}": {
+      "get": {
+        "operationId": "getSubscriber",
+        "tags": ["Subscribers"],
+        "summary": "Получить подписчика",
+        "x-required-scope": "subscribers:read",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Subscriber" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      },
+      "patch": {
+        "operationId": "updateSubscriber",
+        "tags": ["Subscribers"],
+        "summary": "Обновить подписчика",
+        "x-required-scope": "subscribers:write",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SubscriberUpdateRequest" } } }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/Subscriber" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "413": { "$ref": "#/components/responses/PayloadTooLarge" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" },
+          "422": { "$ref": "#/components/responses/ValidationFailed" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "AppsMax API token",
+        "description": "Рекомендуемый вариант: Authorization: Bearer YOUR_API_TOKEN"
+      },
+      "apiTokenHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Api-Token",
+        "description": "Fallback для клиентов без Bearer auth. Не передавайте токен в URL."
+      }
+    },
+    "parameters": {
+      "IdPath": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer", "minimum": 1 }
+      },
+      "BotPath": {
+        "name": "bot",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer", "minimum": 1 }
+      },
+      "ApplicationPath": {
+        "name": "application",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer", "minimum": 1 }
+      },
+      "CampaignPath": {
+        "name": "campaign",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer", "minimum": 1 }
+      },
+      "IdempotencyKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": false,
+        "description": "Уникальный ключ повтора для безопасного retry. Один ключ нельзя использовать с другим телом запроса. Допустимы 1–128 символов: A-Z, a-z, 0-9, точка, подчёркивание, двоеточие и дефис.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        }
+      },
+      "BotIdQuery": {
+        "name": "bot_id",
+        "in": "query",
+        "schema": { "type": "integer", "minimum": 1 }
+      },
+      "Driver": {
+        "name": "driver",
+        "in": "query",
+        "schema": { "type": "string" }
+      },
+      "StatusSingle": {
+        "name": "status",
+        "in": "query",
+        "schema": { "type": "string" }
+      },
+      "StatusArray": {
+        "name": "status[]",
+        "in": "query",
+        "style": "form",
+        "explode": true,
+        "schema": { "type": "array", "items": { "type": "string" } }
+      },
+      "SourceArray": {
+        "name": "source[]",
+        "in": "query",
+        "style": "form",
+        "explode": true,
+        "schema": { "type": "array", "items": { "type": "string" } }
+      },
+      "TypeArray": {
+        "name": "type[]",
+        "in": "query",
+        "style": "form",
+        "explode": true,
+        "schema": { "type": "array", "items": { "type": "string" } }
+      },
+      "ChannelArray": {
+        "name": "channel[]",
+        "in": "query",
+        "style": "form",
+        "explode": true,
+        "schema": { "type": "array", "items": { "type": "string" } }
+      },
+      "Active": {
+        "name": "active",
+        "in": "query",
+        "schema": { "type": "boolean" }
+      },
+      "Tag": {
+        "name": "tag",
+        "in": "query",
+        "schema": { "type": "string", "maxLength": 80 }
+      },
+      "GroupId": {
+        "name": "group_id",
+        "in": "query",
+        "schema": { "type": "integer", "minimum": 1 }
+      },
+      "Search": {
+        "name": "q",
+        "in": "query",
+        "schema": { "type": "string", "maxLength": 255 }
+      },
+      "CreatedFrom": {
+        "name": "created_from",
+        "in": "query",
+        "schema": { "type": "string", "format": "date" }
+      },
+      "CreatedTo": {
+        "name": "created_to",
+        "in": "query",
+        "schema": { "type": "string", "format": "date" }
+      },
+      "Direction": {
+        "name": "direction",
+        "in": "query",
+        "schema": { "type": "string", "enum": ["asc", "desc"], "default": "desc" }
+      },
+      "SortCreatedAt": {
+        "name": "sort",
+        "in": "query",
+        "schema": { "type": "string", "enum": ["created_at"], "default": "created_at" }
+      },
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "schema": { "type": "integer", "minimum": 1 }
+      },
+      "PerPage100": {
+        "name": "per_page",
+        "in": "query",
+        "schema": { "type": "integer", "minimum": 1, "maximum": 100 }
+      },
+      "PerPage200": {
+        "name": "per_page",
+        "in": "query",
+        "schema": { "type": "integer", "minimum": 1, "maximum": 200 }
+      }
+    },
+    "headers": {
+      "RequestId": {
+        "description": "Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.",
+        "schema": { "type": "string" }
+      },
+      "ApiVersion": {
+        "description": "Фактическая версия API.",
+        "schema": { "type": "string", "example": "v1" }
+      },
+      "CacheControl": {
+        "description": "Ответы API не должны кешироваться.",
+        "schema": { "type": "string", "example": "no-store, private" }
+      },
+      "Pragma": {
+        "description": "Совместимый запрет кеширования для legacy-прокси.",
+        "schema": { "type": "string", "example": "no-cache" }
+      },
+      "RateLimitLimit": {
+        "description": "Лимит запросов в текущем окне.",
+        "schema": { "type": "integer" }
+      },
+      "RateLimitRemaining": {
+        "description": "Оставшееся число запросов в текущем окне.",
+        "schema": { "type": "integer" }
+      },
+      "RetryAfter": {
+        "description": "Число секунд до повторной попытки.",
+        "schema": { "type": "integer" }
+      },
+      "IdempotencyReplayed": {
+        "description": "true, если возвращён результат ранее выполненного запроса; false при первоначальном создании.",
+        "schema": { "type": "string", "enum": ["true", "false"] }
+      }
+    },
+    "schemas": {
+      "PingResponse": {
+        "type": "object",
+        "required": ["status", "organization_id"],
+        "properties": {
+          "status": { "type": "string", "example": "ok" },
+          "organization_id": { "type": "integer", "nullable": true }
+        }
+      },
+      "ResourceEnvelope": {
+        "type": "object",
+        "required": ["data"],
+        "properties": {
+          "data": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "CollectionEnvelope": {
+        "type": "object",
+        "required": ["data"],
+        "properties": {
+          "data": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+          "links": { "type": "object", "additionalProperties": true },
+          "meta": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "Organization": {
+        "type": "object",
+        "required": ["id", "name", "slug"],
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "slug": { "type": "string" },
+          "email": { "type": "string", "format": "email", "nullable": true },
+          "website": { "type": "string", "format": "uri", "nullable": true },
+          "phone": { "type": "string", "nullable": true },
+          "plan": { "type": "object", "nullable": true, "additionalProperties": true },
+          "created_at": { "type": "string", "format": "date-time", "nullable": true },
+          "updated_at": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "ApiTokenContext": {
+        "type": "object",
+        "required": ["id", "name", "scopes"],
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "scopes": { "type": "array", "items": { "type": "string" } },
+          "rate_limit": { "type": "integer", "nullable": true },
+          "last_used_at": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "MeResponse": {
+        "type": "object",
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["token", "organization"],
+            "properties": {
+              "token": { "$ref": "#/components/schemas/ApiTokenContext" },
+              "organization": { "$ref": "#/components/schemas/Organization" }
+            }
+          }
+        }
+      },
+      "Bot": {
+        "type": "object",
+        "required": ["id", "organization_id", "name", "status"],
+        "description": "Безопасное представление бота. Секретный токен подключения никогда не возвращается.",
+        "properties": {
+          "id": { "type": "integer" },
+          "public_id": { "type": "string", "nullable": true },
+          "organization_id": { "type": "integer" },
+          "driver": { "type": "string", "nullable": true },
+          "name": { "type": "string" },
+          "status": { "type": "string" },
+          "telegram_username": { "type": "string", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "short_description": { "type": "string", "nullable": true },
+          "commands_menu_name": { "type": "string", "nullable": true },
+          "interactive_menu_name": { "type": "string", "nullable": true },
+          "interactive_menu_markup": { "type": "string", "nullable": true },
+          "interactive_menu_columns": { "type": "integer", "nullable": true },
+          "interactive_menu_show_back_button": { "type": "boolean", "nullable": true },
+          "interactive_menu_show_home_button": { "type": "boolean", "nullable": true },
+          "scenarios_active": { "type": "boolean", "nullable": true },
+          "commands_active": { "type": "boolean", "nullable": true },
+          "interactive_menu_active": { "type": "boolean", "nullable": true },
+          "miniapps_active": { "type": "boolean", "nullable": true },
+          "subscribers_active": { "type": "boolean", "nullable": true },
+          "groups_active": { "type": "boolean", "nullable": true },
+          "channels_active": { "type": "boolean", "nullable": true },
+          "created_at": { "type": "string", "format": "date-time", "nullable": true },
+          "updated_at": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "BotConnection": {
+        "type": "object",
+        "required": ["bot_id", "driver", "status"],
+        "properties": {
+          "bot_id": { "type": "integer" },
+          "driver": { "type": "string", "nullable": true },
+          "status": { "type": "string", "nullable": true },
+          "identifier": { "type": "string", "nullable": true },
+          "profile": {
+            "type": "object",
+            "nullable": true,
+            "oneOf": [
+              { "$ref": "#/components/schemas/TelegramBotConnectionProfile" },
+              { "$ref": "#/components/schemas/MaxBotConnectionProfile" }
+            ]
+          },
+          "last_synced_at": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "TelegramBotConnectionProfile": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "integer", "nullable": true },
+          "username": { "type": "string", "nullable": true },
+          "first_name": { "type": "string", "nullable": true },
+          "last_name": { "type": "string", "nullable": true },
+          "is_bot": { "type": "boolean", "nullable": true },
+          "can_join_groups": { "type": "boolean", "nullable": true },
+          "can_read_all_group_messages": { "type": "boolean", "nullable": true },
+          "supports_inline_queries": { "type": "boolean", "nullable": true },
+          "can_connect_to_business": { "type": "boolean", "nullable": true },
+          "has_main_web_app": { "type": "boolean", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "short_description": { "type": "string", "nullable": true }
+        }
+      },
+      "MaxBotConnectionProfile": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_id": { "type": "integer", "nullable": true },
+          "name": { "type": "string", "nullable": true },
+          "username": { "type": "string", "nullable": true }
+        }
+      },
+      "Miniapp": {
+        "type": "object",
+        "required": ["id", "bot_id", "name", "slug", "status"],
+        "properties": {
+          "id": { "type": "integer" },
+          "bot_id": { "type": "integer" },
+          "name": { "type": "string" },
+          "slug": { "type": "string" },
+          "status": { "type": "string" },
+          "description": { "type": "string", "nullable": true },
+          "published_at": { "type": "string", "format": "date-time", "nullable": true },
+          "created_at": { "type": "string", "format": "date-time", "nullable": true },
+          "updated_at": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "Funnel": {
+        "type": "object",
+        "required": ["id", "bot_id", "title", "is_active"],
+        "properties": {
+          "id": { "type": "integer" },
+          "bot_id": { "type": "integer" },
+          "title": { "type": "string" },
+          "description": { "type": "string", "nullable": true },
+          "is_active": { "type": "boolean" },
+          "restart_mode": { "type": "string", "nullable": true },
+          "start_block_id": { "type": "integer", "nullable": true },
+          "version": { "type": "integer", "nullable": true },
+          "created_at": { "type": "string", "format": "date-time", "nullable": true },
+          "updated_at": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "InteractiveMenuItem": {
+        "type": "object",
+        "required": ["id", "bot_id", "title", "active", "sort_order"],
+        "properties": {
+          "id": { "type": "integer" },
+          "bot_id": { "type": "integer" },
+          "parent_id": { "type": "integer", "nullable": true },
+          "type": { "type": "string", "nullable": true },
+          "title": { "type": "string" },
+          "command": { "type": "string", "nullable": true },
+          "trigger_text": { "type": "string", "nullable": true },
+          "action": { "type": "string", "nullable": true },
+          "payload": { "type": "string", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "survey_template_id": { "type": "integer", "nullable": true },
+          "linked_command_id": { "type": "integer", "nullable": true },
+          "child_display_mode": { "type": "string", "nullable": true },
+          "show_in_menu": { "type": "boolean", "nullable": true },
+          "is_system": { "type": "boolean", "nullable": true },
+          "active": { "type": "boolean" },
+          "sort_order": { "type": "integer" },
+          "created_at": { "type": "string", "format": "date-time", "nullable": true },
+          "updated_at": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "Application": {
+        "type": "object",
+        "required": ["id", "bot_id", "organization_id", "source", "status", "contact", "answers", "tags"],
+        "properties": {
+          "id": { "type": "integer" },
+          "bot_id": { "type": "integer" },
+          "organization_id": { "type": "integer" },
+          "number": { "type": "integer", "nullable": true },
+          "source": { "type": "string" },
+          "source_label": { "type": "string", "nullable": true },
+          "status": { "type": "string" },
+          "status_label": { "type": "string", "nullable": true },
+          "submitted_at": { "type": "string", "format": "date-time", "nullable": true },
+          "created_at": { "type": "string", "format": "date-time", "nullable": true },
+          "contact": { "type": "object", "additionalProperties": true },
+          "answers": { "type": "object", "additionalProperties": true },
+          "form_meta": { "type": "object", "additionalProperties": true },
+          "tags": { "type": "array", "items": { "$ref": "#/components/schemas/ApplicationTag" } }
+        }
+      },
+      "ApplicationTag": {
+        "type": "object",
+        "required": ["id", "name", "slug"],
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "slug": { "type": "string" }
+        }
+      },
+      "Campaign": {
+        "type": "object",
+        "required": ["id", "organization_id", "bot_id", "status", "type"],
+        "properties": {
+          "id": { "type": "integer" },
+          "organization_id": { "type": "integer" },
+          "bot_id": { "type": "integer" },
+          "name": { "type": "string", "nullable": true },
+          "status": { "type": "string", "nullable": true },
+          "type": { "type": "string" },
+          "recipients": { "type": "integer" },
+          "delivered": { "type": "integer" },
+          "failed": { "type": "integer" },
+          "scheduled_at": { "type": "string", "format": "date-time", "nullable": true },
+          "finished_at": { "type": "string", "format": "date-time", "nullable": true },
+          "created_at": { "type": "string", "format": "date-time", "nullable": true },
+          "updated_at": { "type": "string", "format": "date-time", "nullable": true },
+          "content": { "type": "object", "additionalProperties": true },
+          "pending": { "type": "integer" }
+        }
+      },
+      "Subscriber": {
+        "type": "object",
+        "required": ["id", "organization_id", "bot_id", "channel", "external_id", "tags"],
+        "properties": {
+          "id": { "type": "integer" },
+          "organization_id": { "type": "integer" },
+          "bot_id": { "type": "integer" },
+          "channel": { "type": "string", "nullable": true },
+          "external_id": { "type": "string" },
+          "status": { "type": "string", "nullable": true },
+          "username": { "type": "string", "nullable": true },
+          "name": { "type": "string", "nullable": true },
+          "phone": { "type": "string", "nullable": true },
+          "email": { "type": "string", "format": "email", "nullable": true },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "groups": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+          "last_activity_at": { "type": "string", "format": "date-time", "nullable": true },
+          "created_at": { "type": "string", "format": "date-time", "nullable": true },
+          "updated_at": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "OrganizationCollection": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CollectionEnvelope" },
+          { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Organization" } } } }
+        ]
+      },
+      "BotResponse": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ResourceEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/Bot" } } }
+        ]
+      },
+      "BotCollection": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CollectionEnvelope" },
+          { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Bot" } } } }
+        ]
+      },
+      "BotConnectionCollection": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CollectionEnvelope" },
+          { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/BotConnection" } } } }
+        ]
+      },
+      "MiniappCollection": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CollectionEnvelope" },
+          { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Miniapp" } } } }
+        ]
+      },
+      "FunnelCollection": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CollectionEnvelope" },
+          { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Funnel" } } } }
+        ]
+      },
+      "InteractiveMenuCollection": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CollectionEnvelope" },
+          { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/InteractiveMenuItem" } } } }
+        ]
+      },
+      "ApplicationResponse": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ResourceEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/Application" } } }
+        ]
+      },
+      "ApplicationCollection": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CollectionEnvelope" },
+          { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Application" } } } }
+        ]
+      },
+      "CampaignResponse": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ResourceEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/Campaign" } } }
+        ]
+      },
+      "CampaignCollection": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CollectionEnvelope" },
+          { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Campaign" } } } }
+        ]
+      },
+      "SubscriberResponse": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ResourceEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/Subscriber" } } }
+        ]
+      },
+      "SubscriberCollection": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CollectionEnvelope" },
+          { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Subscriber" } } } }
+        ]
+      },
+      "ApplicationCreateRequest": {
+        "type": "object",
+        "required": ["bot_id"],
+        "additionalProperties": false,
+        "properties": {
+          "bot_id": { "type": "integer", "minimum": 1 },
+          "source": {
+            "type": "string",
+            "nullable": true,
+            "enum": ["funnel", "miniapp", "communications", "interactive_menu", "rest_api", "gigachat", "community"],
+            "description": "Поддерживаемый источник AppsMax; при отсутствии используется rest_api."
+          },
+          "title": { "type": "string", "maxLength": 255, "nullable": true },
+          "contact": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "maxLength": 255, "nullable": true },
+              "phone": { "type": "string", "maxLength": 255, "nullable": true },
+              "email": { "type": "string", "format": "email", "maxLength": 255, "nullable": true }
+            }
+          },
+          "channel": { "type": "string", "maxLength": 191, "nullable": true },
+          "payload": { "type": "object", "additionalProperties": true, "maxProperties": 100, "nullable": true }
+        }
+      },
+      "ApplicationTagsRequest": {
+        "type": "object",
+        "required": ["tags"],
+        "additionalProperties": false,
+        "properties": {
+          "tags": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[\\p{L}\\p{M}\\p{N} _-]+$" }
+          }
+        }
+      },
+      "CampaignCreateRequest": {
+        "type": "object",
+        "required": ["bot_id", "title", "content", "channel"],
+        "additionalProperties": false,
+        "properties": {
+          "bot_id": { "type": "integer", "minimum": 1 },
+          "title": { "type": "string", "maxLength": 255 },
+          "content": { "type": "string", "maxLength": 4096 },
+          "channel": { "type": "string", "maxLength": 191 },
+          "scheduled_at": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "SubscriberCreateRequest": {
+        "type": "object",
+        "required": ["bot_id", "channel", "external_id"],
+        "additionalProperties": false,
+        "properties": {
+          "bot_id": { "type": "integer", "minimum": 1 },
+          "channel": { "type": "string", "maxLength": 191 },
+          "external_id": { "type": "string", "maxLength": 255 },
+          "status": { "type": "string", "maxLength": 50, "nullable": true },
+          "name": { "type": "string", "maxLength": 255, "nullable": true },
+          "username": { "type": "string", "maxLength": 255, "nullable": true },
+          "tags": { "type": "array", "nullable": true, "maxItems": 50, "items": { "type": "string", "maxLength": 64 } }
+        }
+      },
+      "SubscriberUpdateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "properties": {
+          "channel": { "type": "string", "maxLength": 191 },
+          "status": { "type": "string", "maxLength": 50 },
+          "name": { "type": "string", "maxLength": 255, "nullable": true },
+          "username": { "type": "string", "maxLength": 255, "nullable": true },
+          "tags": { "type": "array", "nullable": true, "maxItems": 50, "items": { "type": "string", "maxLength": 64 } }
+        }
+      },
+      "ApiError": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["code", "message", "meta"],
+            "properties": {
+              "code": { "type": "string" },
+              "message": { "type": "string" },
+              "details": { "type": "object", "additionalProperties": true },
+              "meta": {
+                "type": "object",
+                "required": ["request_id"],
+                "properties": {
+                  "request_id": { "type": "string", "description": "Идентификатор запроса для обращения в поддержку." }
+                },
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "Me": {
+        "description": "Контекст текущего токена.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" },
+          "Pragma": { "$ref": "#/components/headers/Pragma" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MeResponse" } } }
+      },
+      "Organizations": {
+        "description": "Организация токена.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/OrganizationCollection" } } }
+      },
+      "Bots": {
+        "description": "Пагинируемая коллекция ботов.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BotCollection" } } }
+      },
+      "Bot": {
+        "description": "Бот без секретов подключения.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BotResponse" } } }
+      },
+      "BotConnections": {
+        "description": "Безопасные сведения о подключении бота.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BotConnectionCollection" } } }
+      },
+      "Miniapps": {
+        "description": "Пагинируемая коллекция мини-приложений.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MiniappCollection" } } }
+      },
+      "Funnels": {
+        "description": "Пагинируемая коллекция сценариев.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/FunnelCollection" } } }
+      },
+      "InteractiveMenu": {
+        "description": "Пагинируемая коллекция элементов меню.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/InteractiveMenuCollection" } } }
+      },
+      "Applications": {
+        "description": "Пагинируемая коллекция заявок.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApplicationCollection" } } }
+      },
+      "Application": {
+        "description": "Заявка.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApplicationResponse" } } }
+      },
+      "ApplicationCreated": {
+        "description": "Заявка создана.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" },
+          "Idempotency-Replayed": { "$ref": "#/components/headers/IdempotencyReplayed" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApplicationResponse" } } }
+      },
+      "ApplicationReplay": {
+        "description": "Повтор ранее выполненного создания заявки.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" },
+          "Idempotency-Replayed": { "$ref": "#/components/headers/IdempotencyReplayed" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApplicationResponse" } } }
+      },
+      "Campaigns": {
+        "description": "Пагинируемая коллекция кампаний.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CampaignCollection" } } }
+      },
+      "Campaign": {
+        "description": "Кампания.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CampaignResponse" } } }
+      },
+      "CampaignCreated": {
+        "description": "Кампания создана.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" },
+          "Idempotency-Replayed": { "$ref": "#/components/headers/IdempotencyReplayed" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CampaignResponse" } } }
+      },
+      "CampaignReplay": {
+        "description": "Повтор ранее выполненного создания кампании.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" },
+          "Idempotency-Replayed": { "$ref": "#/components/headers/IdempotencyReplayed" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CampaignResponse" } } }
+      },
+      "Subscribers": {
+        "description": "Пагинируемая коллекция подписчиков.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SubscriberCollection" } } }
+      },
+      "Subscriber": {
+        "description": "Подписчик.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "Cache-Control": { "$ref": "#/components/headers/CacheControl" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SubscriberResponse" } } }
+      },
+      "BadRequest": {
+        "description": "Повреждённый JSON или синтаксически неверный запрос.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } }
+      },
+      "Unauthorized": {
+        "description": "Токен отсутствует, недействителен или отозван.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } }
+      },
+      "Forbidden": {
+        "description": "Нет нужного scope или доступа к организации.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } }
+      },
+      "NotFound": {
+        "description": "Ресурс не найден в доступном контуре.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } }
+      },
+      "Conflict": {
+        "description": "Idempotency-Key уже использован с другим запросом.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } }
+      },
+      "PayloadTooLarge": {
+        "description": "Тело запроса превышает допустимый размер.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } }
+      },
+      "UnsupportedMediaType": {
+        "description": "Для запроса с телом требуется Content-Type: application/json.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } }
+      },
+      "ValidationFailed": {
+        "description": "Поля запроса не прошли валидацию.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } }
+      },
+      "RateLimited": {
+        "description": "Превышен rate limit токена или операции.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" },
+          "X-RateLimit-Limit": { "$ref": "#/components/headers/RateLimitLimit" },
+          "X-RateLimit-Remaining": { "$ref": "#/components/headers/RateLimitRemaining" },
+          "Retry-After": { "$ref": "#/components/headers/RetryAfter" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } }
+      },
+      "ServerError": {
+        "description": "Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/RequestId" },
+          "X-Api-Version": { "$ref": "#/components/headers/ApiVersion" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } }
+      }
+    }
+  },
+  "x-appsmax-verified-at": "2026-08-09",
+  "x-appsmax-default-rate-limit-per-minute": 60,
+  "x-appsmax-public-sdk": false,
+  "x-appsmax-webhooks-covered": false
+}

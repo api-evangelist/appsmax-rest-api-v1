@@ -1,0 +1,112 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+provider: AppsMax
+providerId: appsmax-rest-api-v1
+generated: '2026-08-09'
+method: searched
+created: '2026-08-09'
+modified: '2026-08-09'
+sources:
+  - https://appsmax.ru/pricing/
+  - https://appsmax.ru/developers/
+  - https://appsmax.ru/.well-known/api-onboarding
+currency: RUB
+billing_period: month
+model: freemium ladder with a permanent free tier; REST API gated to the top tier
+api_access_note: >-
+  REST API access is NOT included in the free tier. It is included in the paid Профи (Profi)
+  plan, or granted as an individual access right. A 7-day Profi trial is available in the
+  cabinet, and its countdown starts at real launch rather than at registration.
+signup: https://telegram.appsmax.ru/register
+plans:
+  - name: Старт
+    name_en: Start
+    price: 0
+    currency: RUB
+    period: month
+    free: true
+    api_access: false
+    limits:
+      bots: 1
+      community_scenarios: 1
+      contacts: 100
+      storage: 15 MB
+    notes: Permanent free tier. Includes a 7-day Profi trial that starts after the first real launch.
+
+  - name: Сообщества MAX
+    name_en: MAX Communities
+    price: 490
+    currency: RUB
+    period: month
+    api_access: false
+    limits:
+      max_groups: 3
+      max_channels: 3
+      scenarios: 3
+      contacts: unlimited
+      storage: 50 MB
+
+  - name: Автоматизация
+    name_en: Automation
+    price: 1000
+    currency: RUB
+    period: month
+    api_access: false
+    limits:
+      bots: 2
+      contacts: 2000
+      storage: 100 MB
+    features: [interactive menu, scenarios, MAX communities, messaging, GigaChat with documents and FAQ]
+
+  - name: Мини-приложения
+    name_en: Mini Apps
+    price: 3000
+    currency: RUB
+    period: month
+    api_access: false
+    limits:
+      bots: 3
+      miniapps: 10
+      contacts: 10000
+      storage: 1 GB
+      telegram_broadcast: 500/10000
+    features: [online booking, online store, catalogues, quizzes, publications, GigaChat]
+
+  - name: Профи
+    name_en: Profi
+    price: 5000
+    currency: RUB
+    period: month
+    api_access: true
+    api_note: This is the tier the published REST API v1 is included in.
+    trial:
+      length_days: 7
+      starts_at: first real launch (not at registration)
+    limits:
+      bots: 10
+      miniapps: unlimited
+      contacts: unlimited
+      storage: 5 GB
+      telegram_broadcast: 1000/30000
+    features: [everything in Mini Apps, HoReCa, export and integrations, extended analytics, team]
+
+custom:
+  - name: Внедрение под ключ
+    name_en: Turnkey implementation
+    price: null
+    pricing: quoted per engagement
+
+plan_count: 5
+free_tier: true
+paid_entry_price: 490
+api_tier_price: 5000
+caveats:
+  - Broadcasts inside MAX require a separate contract with MAX itself.
+  - The provider instructs integrators to confirm the exact tier composition on the pricing page before building.
+x-evidence:
+  fetched: '2026-08-09'
+  urls:
+    - url: https://appsmax.ru/pricing/
+      http_status: 200
+    - url: https://appsmax.ru/.well-known/api-onboarding
+      http_status: 200
