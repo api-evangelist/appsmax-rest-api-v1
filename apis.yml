@@ -45,62 +45,279 @@ tags:
   - Telegram
   - Russian Language
 apis:
-  - aid: appsmax.ru:rest-api-v1
-    name: AppsMax REST API v1
-    description: >-
-      Server-to-server API for managing AppsMax organizations, bots, connections, mini apps, funnels, interactive menus,
-      customer requests, campaigns and subscribers. 17 paths and 21 operations across the Access, Organizations, Bots,
-      Miniapps, Funnels, Interactive menu, Applications, Campaigns and Subscribers tags. Authenticated with an
-      organization-owned API token, sent as an Authorization Bearer header or an X-Api-Token fallback header, with 12
-      documented scopes. Idempotency-Key is supported on the two create operations, every response carries X-Request-Id
-      and X-Api-Version, and the default limit is 60 requests per minute per token. This is the AppsMax platform API,
-      not an official API of MAX or Telegram.
-    image: https://appsmax.ru/wp-content/themes/appsmax-site/assets/img/logo-appsmax.svg
-    humanURL: https://appsmax.ru/developers/
-    baseURL: https://telegram.appsmax.ru/api/v1
-    version: 1.0.0
-    tags:
-      - REST
-      - OpenAPI
-      - Chatbots
-      - Mini Apps
-      - Customer Requests
-      - Workflow Automation
-      - Campaigns
-      - Subscribers
-      - MAX
-      - Telegram
-      - Russian Language
-    properties:
-      - type: Documentation
-        url: https://appsmax.ru/developers/
-      - type: OpenAPI
-        mediaType: application/vnd.oai.openapi+json;version=3.0
-        url: https://appsmax.ru/developers/openapi.json
-      - type: OpenAPI
-        name: AppsMax REST API v1 — harvested contract (OpenAPI 3.0.3, v1.1.1)
-        mediaType: application/vnd.oai.openapi+json;version=3.0
-        url: openapi/appsmax-rest-api-v1-openapi-original.json
-      - type: GettingStarted
-        url: https://appsmax.ru/developers/#quick-start
-      - type: Authentication
-        url: https://appsmax.ru/developers/#authentication
-      - type: APIOnboarding
-        mediaType: application/json
-        url: https://appsmax.ru/.well-known/api-onboarding
-      - type: RateLimits
-        url: https://appsmax.ru/developers/#errors
-      - type: Pricing
-        url: https://appsmax.ru/pricing/
-      - type: TermsOfService
-        url: https://appsmax.ru/documents/publichnaya-oferta/
-      - type: PrivacyPolicy
-        url: https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/
-      - type: Support
-        url: https://appsmax.ru/contacts/
-      - type: LLMSTxt
-        url: https://appsmax.ru/llms.txt
+- aid: appsmax-rest-api-v1:appsmax-rest-api-v1-access-api
+  name: AppsMax Access API
+  description: Проверка токена и контекста организации.
+  humanURL: https://appsmax.ru/developers/
+  baseURL: https://telegram.appsmax.ru/api/v1
+  tags:
+  - Access
+  properties:
+  - type: OpenAPI
+    url: openapi/appsmax-rest-api-v1-access-api-openapi.yml
+  - type: Documentation
+    url: https://appsmax.ru/developers/
+  - type: GettingStarted
+    url: https://appsmax.ru/developers/#quick-start
+  - type: Authentication
+    url: https://appsmax.ru/developers/#authentication
+  - type: APIOnboarding
+    url: https://appsmax.ru/.well-known/api-onboarding
+  - type: RateLimits
+    url: https://appsmax.ru/developers/#errors
+  - type: Pricing
+    url: https://appsmax.ru/pricing/
+  - type: TermsOfService
+    url: https://appsmax.ru/documents/publichnaya-oferta/
+  - type: PrivacyPolicy
+    url: https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/
+  - type: Support
+    url: https://appsmax.ru/contacts/
+  - type: LLMSTxt
+    url: https://appsmax.ru/llms.txt
+- aid: appsmax-rest-api-v1:appsmax-rest-api-v1-applications-api
+  name: AppsMax Applications API
+  description: Заявки и их теги.
+  humanURL: https://appsmax.ru/developers/
+  baseURL: https://telegram.appsmax.ru/api/v1
+  tags:
+  - Applications
+  properties:
+  - type: OpenAPI
+    url: openapi/appsmax-rest-api-v1-applications-api-openapi.yml
+  - type: Documentation
+    url: https://appsmax.ru/developers/
+  - type: GettingStarted
+    url: https://appsmax.ru/developers/#quick-start
+  - type: Authentication
+    url: https://appsmax.ru/developers/#authentication
+  - type: APIOnboarding
+    url: https://appsmax.ru/.well-known/api-onboarding
+  - type: RateLimits
+    url: https://appsmax.ru/developers/#errors
+  - type: Pricing
+    url: https://appsmax.ru/pricing/
+  - type: TermsOfService
+    url: https://appsmax.ru/documents/publichnaya-oferta/
+  - type: PrivacyPolicy
+    url: https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/
+  - type: Support
+    url: https://appsmax.ru/contacts/
+  - type: LLMSTxt
+    url: https://appsmax.ru/llms.txt
+- aid: appsmax-rest-api-v1:appsmax-rest-api-v1-bots-api
+  name: AppsMax Bots API
+  description: Боты и их безопасные сведения о подключении без секретов.
+  humanURL: https://appsmax.ru/developers/
+  baseURL: https://telegram.appsmax.ru/api/v1
+  tags:
+  - Bots
+  properties:
+  - type: OpenAPI
+    url: openapi/appsmax-rest-api-v1-bots-api-openapi.yml
+  - type: Documentation
+    url: https://appsmax.ru/developers/
+  - type: GettingStarted
+    url: https://appsmax.ru/developers/#quick-start
+  - type: Authentication
+    url: https://appsmax.ru/developers/#authentication
+  - type: APIOnboarding
+    url: https://appsmax.ru/.well-known/api-onboarding
+  - type: RateLimits
+    url: https://appsmax.ru/developers/#errors
+  - type: Pricing
+    url: https://appsmax.ru/pricing/
+  - type: TermsOfService
+    url: https://appsmax.ru/documents/publichnaya-oferta/
+  - type: PrivacyPolicy
+    url: https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/
+  - type: Support
+    url: https://appsmax.ru/contacts/
+  - type: LLMSTxt
+    url: https://appsmax.ru/llms.txt
+- aid: appsmax-rest-api-v1:appsmax-rest-api-v1-campaigns-api
+  name: AppsMax Campaigns API
+  description: Рассылки и их запуск.
+  humanURL: https://appsmax.ru/developers/
+  baseURL: https://telegram.appsmax.ru/api/v1
+  tags:
+  - Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/appsmax-rest-api-v1-campaigns-api-openapi.yml
+  - type: Documentation
+    url: https://appsmax.ru/developers/
+  - type: GettingStarted
+    url: https://appsmax.ru/developers/#quick-start
+  - type: Authentication
+    url: https://appsmax.ru/developers/#authentication
+  - type: APIOnboarding
+    url: https://appsmax.ru/.well-known/api-onboarding
+  - type: RateLimits
+    url: https://appsmax.ru/developers/#errors
+  - type: Pricing
+    url: https://appsmax.ru/pricing/
+  - type: TermsOfService
+    url: https://appsmax.ru/documents/publichnaya-oferta/
+  - type: PrivacyPolicy
+    url: https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/
+  - type: Support
+    url: https://appsmax.ru/contacts/
+  - type: LLMSTxt
+    url: https://appsmax.ru/llms.txt
+- aid: appsmax-rest-api-v1:appsmax-rest-api-v1-funnels-api
+  name: AppsMax Funnels API
+  description: Сценарии и воронки ботов.
+  humanURL: https://appsmax.ru/developers/
+  baseURL: https://telegram.appsmax.ru/api/v1
+  tags:
+  - Funnels
+  properties:
+  - type: OpenAPI
+    url: openapi/appsmax-rest-api-v1-funnels-api-openapi.yml
+  - type: Documentation
+    url: https://appsmax.ru/developers/
+  - type: GettingStarted
+    url: https://appsmax.ru/developers/#quick-start
+  - type: Authentication
+    url: https://appsmax.ru/developers/#authentication
+  - type: APIOnboarding
+    url: https://appsmax.ru/.well-known/api-onboarding
+  - type: RateLimits
+    url: https://appsmax.ru/developers/#errors
+  - type: Pricing
+    url: https://appsmax.ru/pricing/
+  - type: TermsOfService
+    url: https://appsmax.ru/documents/publichnaya-oferta/
+  - type: PrivacyPolicy
+    url: https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/
+  - type: Support
+    url: https://appsmax.ru/contacts/
+  - type: LLMSTxt
+    url: https://appsmax.ru/llms.txt
+- aid: appsmax-rest-api-v1:appsmax-rest-api-v1-interactive-menu-api
+  name: AppsMax Interactive menu API
+  description: Элементы интерактивного меню ботов.
+  humanURL: https://appsmax.ru/developers/
+  baseURL: https://telegram.appsmax.ru/api/v1
+  tags:
+  - Interactive menu
+  properties:
+  - type: OpenAPI
+    url: openapi/appsmax-rest-api-v1-interactive-menu-api-openapi.yml
+  - type: Documentation
+    url: https://appsmax.ru/developers/
+  - type: GettingStarted
+    url: https://appsmax.ru/developers/#quick-start
+  - type: Authentication
+    url: https://appsmax.ru/developers/#authentication
+  - type: APIOnboarding
+    url: https://appsmax.ru/.well-known/api-onboarding
+  - type: RateLimits
+    url: https://appsmax.ru/developers/#errors
+  - type: Pricing
+    url: https://appsmax.ru/pricing/
+  - type: TermsOfService
+    url: https://appsmax.ru/documents/publichnaya-oferta/
+  - type: PrivacyPolicy
+    url: https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/
+  - type: Support
+    url: https://appsmax.ru/contacts/
+  - type: LLMSTxt
+    url: https://appsmax.ru/llms.txt
+- aid: appsmax-rest-api-v1:appsmax-rest-api-v1-miniapps-api
+  name: AppsMax Miniapps API
+  description: Мини-приложения организации.
+  humanURL: https://appsmax.ru/developers/
+  baseURL: https://telegram.appsmax.ru/api/v1
+  tags:
+  - Miniapps
+  properties:
+  - type: OpenAPI
+    url: openapi/appsmax-rest-api-v1-miniapps-api-openapi.yml
+  - type: Documentation
+    url: https://appsmax.ru/developers/
+  - type: GettingStarted
+    url: https://appsmax.ru/developers/#quick-start
+  - type: Authentication
+    url: https://appsmax.ru/developers/#authentication
+  - type: APIOnboarding
+    url: https://appsmax.ru/.well-known/api-onboarding
+  - type: RateLimits
+    url: https://appsmax.ru/developers/#errors
+  - type: Pricing
+    url: https://appsmax.ru/pricing/
+  - type: TermsOfService
+    url: https://appsmax.ru/documents/publichnaya-oferta/
+  - type: PrivacyPolicy
+    url: https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/
+  - type: Support
+    url: https://appsmax.ru/contacts/
+  - type: LLMSTxt
+    url: https://appsmax.ru/llms.txt
+- aid: appsmax-rest-api-v1:appsmax-rest-api-v1-organizations-api
+  name: AppsMax Organizations API
+  description: Организация, к которой привязан токен.
+  humanURL: https://appsmax.ru/developers/
+  baseURL: https://telegram.appsmax.ru/api/v1
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/appsmax-rest-api-v1-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://appsmax.ru/developers/
+  - type: GettingStarted
+    url: https://appsmax.ru/developers/#quick-start
+  - type: Authentication
+    url: https://appsmax.ru/developers/#authentication
+  - type: APIOnboarding
+    url: https://appsmax.ru/.well-known/api-onboarding
+  - type: RateLimits
+    url: https://appsmax.ru/developers/#errors
+  - type: Pricing
+    url: https://appsmax.ru/pricing/
+  - type: TermsOfService
+    url: https://appsmax.ru/documents/publichnaya-oferta/
+  - type: PrivacyPolicy
+    url: https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/
+  - type: Support
+    url: https://appsmax.ru/contacts/
+  - type: LLMSTxt
+    url: https://appsmax.ru/llms.txt
+- aid: appsmax-rest-api-v1:appsmax-rest-api-v1-subscribers-api
+  name: AppsMax Subscribers API
+  description: Подписчики и их сегментационные теги.
+  humanURL: https://appsmax.ru/developers/
+  baseURL: https://telegram.appsmax.ru/api/v1
+  tags:
+  - Subscribers
+  properties:
+  - type: OpenAPI
+    url: openapi/appsmax-rest-api-v1-subscribers-api-openapi.yml
+  - type: Documentation
+    url: https://appsmax.ru/developers/
+  - type: GettingStarted
+    url: https://appsmax.ru/developers/#quick-start
+  - type: Authentication
+    url: https://appsmax.ru/developers/#authentication
+  - type: APIOnboarding
+    url: https://appsmax.ru/.well-known/api-onboarding
+  - type: RateLimits
+    url: https://appsmax.ru/developers/#errors
+  - type: Pricing
+    url: https://appsmax.ru/pricing/
+  - type: TermsOfService
+    url: https://appsmax.ru/documents/publichnaya-oferta/
+  - type: PrivacyPolicy
+    url: https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/
+  - type: Support
+    url: https://appsmax.ru/contacts/
+  - type: LLMSTxt
+    url: https://appsmax.ru/llms.txt
 common:
+  - type: MCPServer
+    url: mcp/appsmax-rest-api-v1-mcp.yml
   - type: AgenticAccess
     url: agentic-access/appsmax-rest-api-v1-agentic-access.yml
   - type: DomainSecurity
