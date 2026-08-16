@@ -1,0 +1,21 @@
+{
+  "repo": "appsmax-rest-api-v1",
+  "feeds": [
+    {
+      "source": "https://appsmax.ru/developers/#methods",
+      "feed_url": "https://appsmax.ru/developers/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
+    },
+    {
+      "source": "https://appsmax.ru/news/",
+      "feed_url": "https://appsmax.ru/news/feed/",
+      "title": "",
+      "saved": 1,
+      "method": "discovered"
+    }
+  ],
+  "post_count": 1,
+  "fetched": "2026-08-15T12:22:01Z"
+}
