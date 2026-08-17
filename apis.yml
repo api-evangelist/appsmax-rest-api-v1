@@ -20,7 +20,7 @@ description: >-
   contract, an APIs.json index, an API Onboarding Descriptor and an llms.txt. AppsMax is not a product of, nor an
   official representative of, MAX, Telegram or GigaChat.
 image: https://appsmax.ru/wp-content/themes/appsmax-site/assets/img/logo-appsmax.svg
-url: https://appsmax-rest-api-v1.apievangelist.com/apis.yml
+url: https://raw.githubusercontent.com/api-evangelist/appsmax-rest-api-v1/refs/heads/main/apis.yml
 type: Index
 kind: company
 specificationVersion: '0.21'
