@@ -1,0 +1,622 @@
+{
+  "item": [
+    {
+      "id": "a15c05e4-d1c4-4924-9bb8-5ce340d43126",
+      "name": "Interactive menu",
+      "description": {
+        "content": "Элементы интерактивного меню ботов.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e9623798-09ea-4fd7-bff3-7261d28f0496",
+          "name": "Получить элементы интерактивного меню",
+          "request": {
+            "name": "Получить элементы интерактивного меню",
+            "description": {},
+            "url": {
+              "path": [
+                "interactive-menu"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "bot_id",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "active",
+                  "value": "<boolean>"
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ab8de7a6-f314-44cf-a940-f33f3e401865",
+              "name": "Пагинируемая коллекция элементов меню.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "interactive-menu"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "bot_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "active",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.",
+                  "key": "X-Request-Id",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Фактическая версия API.",
+                  "key": "X-Api-Version",
+                  "value": "v1"
+                },
+                {
+                  "disabled": false,
+                  "description": "Ответы API не должны кешироваться.",
+                  "key": "Cache-Control",
+                  "value": "no-store, private"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 8903,\n      \"bot_id\": 3201,\n      \"title\": \"string\",\n      \"active\": false,\n      \"sort_order\": 2818,\n      \"parent_id\": 1410,\n      \"type\": null,\n      \"command\": null,\n      \"trigger_text\": null,\n      \"action\": null,\n      \"payload\": \"string\",\n      \"description\": null,\n      \"survey_template_id\": null,\n      \"linked_command_id\": 2609,\n      \"child_display_mode\": \"string\",\n      \"show_in_menu\": false,\n      \"is_system\": null,\n      \"created_at\": \"1954-04-06T09:44:56.115Z\",\n      \"updated_at\": null\n    },\n    {\n      \"id\": 9656,\n      \"bot_id\": 1590,\n      \"title\": \"string\",\n      \"active\": false,\n      \"sort_order\": 6477,\n      \"parent_id\": null,\n      \"type\": null,\n      \"command\": null,\n      \"trigger_text\": null,\n      \"action\": \"string\",\n      \"payload\": null,\n      \"description\": null,\n      \"survey_template_id\": null,\n      \"linked_command_id\": null,\n      \"child_display_mode\": \"string\",\n      \"show_in_menu\": true,\n      \"is_system\": null,\n      \"created_at\": \"1950-12-16T09:17:07.364Z\",\n      \"updated_at\": null\n    }\n  ],\n  \"links\": {\n    \"key_0\": \"string\"\n  },\n  \"meta\": {\n    \"key_0\": 2683.1328790582156,\n    \"key_1\": 6542.412508608149\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "12ebab98-5287-4ffd-9bc6-14db386f332d",
+              "name": "Токен отсутствует, недействителен или отозван.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "interactive-menu"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "bot_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "active",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.",
+                  "key": "X-Request-Id",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Фактическая версия API.",
+                  "key": "X-Api-Version",
+                  "value": "v1"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"meta\": {\n      \"request_id\": \"string\"\n    },\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9fe33b29-0574-4516-a372-91200969bbe8",
+              "name": "Нет нужного scope или доступа к организации.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "interactive-menu"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "bot_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "active",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.",
+                  "key": "X-Request-Id",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Фактическая версия API.",
+                  "key": "X-Api-Version",
+                  "value": "v1"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"meta\": {\n      \"request_id\": \"string\"\n    },\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "069ddbbc-6a8f-4781-a00c-9d9ae8f43a96",
+              "name": "Ресурс не найден в доступном контуре.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "interactive-menu"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "bot_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "active",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.",
+                  "key": "X-Request-Id",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Фактическая версия API.",
+                  "key": "X-Api-Version",
+                  "value": "v1"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"meta\": {\n      \"request_id\": \"string\"\n    },\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "96e149b4-7312-4300-87dd-7eed324c93d3",
+              "name": "Поля запроса не прошли валидацию.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "interactive-menu"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "bot_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "active",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.",
+                  "key": "X-Request-Id",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Фактическая версия API.",
+                  "key": "X-Api-Version",
+                  "value": "v1"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"meta\": {\n      \"request_id\": \"string\"\n    },\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "189785c5-e70e-49bd-851f-c056250ea8b7",
+              "name": "Превышен rate limit токена или операции.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "interactive-menu"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "bot_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "active",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.",
+                  "key": "X-Request-Id",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Фактическая версия API.",
+                  "key": "X-Api-Version",
+                  "value": "v1"
+                },
+                {
+                  "disabled": false,
+                  "description": "Лимит запросов в текущем окне.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "6210"
+                },
+                {
+                  "disabled": false,
+                  "description": "Оставшееся число запросов в текущем окне.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "6210"
+                },
+                {
+                  "disabled": false,
+                  "description": "Число секунд до повторной попытки.",
+                  "key": "Retry-After",
+                  "value": "6210"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"meta\": {\n      \"request_id\": \"string\"\n    },\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b71eabf-5ded-422b-b4aa-0d4288729d87",
+              "name": "Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "interactive-menu"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "bot_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "active",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.",
+                  "key": "X-Request-Id",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Фактическая версия API.",
+                  "key": "X-Api-Version",
+                  "value": "v1"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"meta\": {\n      \"request_id\": \"string\"\n    },\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://telegram.appsmax.ru/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b2b9d8ed-ca8b-4ad1-bc0a-2ac1470c1894",
+    "name": "AppsMax REST Interactive menu API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Публичный server-to-server контракт REST API AppsMax v1. Это API платформы AppsMax, а не официальный API MAX или Telegram. Все ответы API имеют JSON-формат, X-Request-Id и запрет кеширования. Проверено по production-маршрутам, валидации и synthetic acceptance 2026-08-09.\n\nContact Support:\n Name: AppsMax\n Email: info@appsmax.ru",
+      "type": "text/plain"
+    }
+  }
+}

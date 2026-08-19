@@ -1,0 +1,296 @@
+openapi: 3.2.0
+info:
+  title: AppsMax REST Access API
+  version: 1.1.1
+  description: Публичный server-to-server контракт REST API AppsMax v1. Это API платформы AppsMax, а не официальный API MAX или Telegram. Все ответы API имеют JSON-формат, X-Request-Id и запрет кеширования. Проверено по production-маршрутам, валидации и synthetic acceptance 2026-08-09.
+  contact:
+    name: AppsMax
+    url: https://appsmax.ru/contacts/
+    email: info@appsmax.ru
+  license:
+    name: AppsMax API Terms
+    url: https://appsmax.ru/documents/
+servers:
+- url: https://telegram.appsmax.ru/api/v1
+  description: Production API v1
+security:
+- bearerAuth: []
+- apiTokenHeader: []
+tags:
+- name: Access
+  description: Проверка токена и контекста организации.
+paths:
+  /ping:
+    get:
+      operationId: ping
+      tags:
+      - Access
+      summary: Проверить API-токен
+      description: Требует действующий токен, но не требует отдельного scope.
+      responses:
+        '200':
+          description: Токен принят.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            X-Api-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Pragma:
+              $ref: '#/components/headers/Pragma'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PingResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /me:
+    get:
+      operationId: getCurrentApiContext
+      tags:
+      - Access
+      summary: Получить токен и организацию
+      description: Возвращает scopes и фактический rate limit токена. Отдельный scope не требуется.
+      responses:
+        '200':
+          $ref: '#/components/responses/Me'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  headers:
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
+      schema:
+        type: integer
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
+      schema:
+        type: string
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
+      schema:
+        type: integer
+    Pragma:
+      description: Совместимый запрет кеширования для legacy-прокси.
+      schema:
+        type: string
+        example: no-cache
+  schemas:
+    PingResponse:
+      type: object
+      required:
+      - status
+      - organization_id
+      properties:
+        status:
+          type: string
+          example: ok
+        organization_id:
+          type:
+          - integer
+          - 'null'
+    Organization:
+      type: object
+      required:
+      - id
+      - name
+      - slug
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+        website:
+          type:
+          - string
+          - 'null'
+          format: uri
+        phone:
+          type:
+          - string
+          - 'null'
+        plan:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    MeResponse:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - token
+          - organization
+          properties:
+            token:
+              $ref: '#/components/schemas/ApiTokenContext'
+            organization:
+              $ref: '#/components/schemas/Organization'
+    ApiError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          - meta
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+            meta:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Идентификатор запроса для обращения в поддержку.
+              additionalProperties: true
+    ApiTokenContext:
+      type: object
+      required:
+      - id
+      - name
+      - scopes
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+        rate_limit:
+          type:
+          - integer
+          - 'null'
+        last_used_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+  responses:
+    ServerError:
+      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Me:
+      description: Контекст текущего токена.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Pragma:
+          $ref: '#/components/headers/Pragma'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MeResponse'
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    RateLimited:
+      description: Превышен rate limit токена или операции.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: AppsMax API token
+      description: 'Рекомендуемый вариант: Authorization: Bearer YOUR_API_TOKEN'
+    apiTokenHeader:
+      type: apiKey
+      in: header
+      name: X-Api-Token
+      description: Fallback для клиентов без Bearer auth. Не передавайте токен в URL.
+externalDocs:
+  description: Документация и ограничения
+  url: https://appsmax.ru/developers/
+x-appsmax-verified-at: '2026-08-09'
+x-appsmax-default-rate-limit-per-minute: 60
+x-appsmax-public-sdk: false
+x-appsmax-webhooks-covered: false

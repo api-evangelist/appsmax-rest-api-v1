@@ -1,0 +1,625 @@
+openapi: 3.2.0
+info:
+  title: AppsMax REST Subscribers API
+  version: 1.1.1
+  description: Публичный server-to-server контракт REST API AppsMax v1. Это API платформы AppsMax, а не официальный API MAX или Telegram. Все ответы API имеют JSON-формат, X-Request-Id и запрет кеширования. Проверено по production-маршрутам, валидации и synthetic acceptance 2026-08-09.
+  contact:
+    name: AppsMax
+    url: https://appsmax.ru/contacts/
+    email: info@appsmax.ru
+  license:
+    name: AppsMax API Terms
+    url: https://appsmax.ru/documents/
+servers:
+- url: https://telegram.appsmax.ru/api/v1
+  description: Production API v1
+security:
+- bearerAuth: []
+- apiTokenHeader: []
+tags:
+- name: Subscribers
+  description: Подписчики и их сегментационные теги.
+paths:
+  /subscribers:
+    get:
+      operationId: listSubscribers
+      tags:
+      - Subscribers
+      summary: Получить подписчиков
+      x-required-scope: subscribers:read
+      parameters:
+      - $ref: '#/components/parameters/ChannelArray'
+      - $ref: '#/components/parameters/StatusArray'
+      - $ref: '#/components/parameters/BotIdQuery'
+      - $ref: '#/components/parameters/Tag'
+      - $ref: '#/components/parameters/GroupId'
+      - $ref: '#/components/parameters/Search'
+      - $ref: '#/components/parameters/CreatedFrom'
+      - $ref: '#/components/parameters/CreatedTo'
+      - $ref: '#/components/parameters/PerPage100'
+      - $ref: '#/components/parameters/SortCreatedAt'
+      - $ref: '#/components/parameters/Direction'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          $ref: '#/components/responses/Subscribers'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: upsertSubscriber
+      tags:
+      - Subscribers
+      summary: Создать или обновить подписчика
+      description: Операция выполняет upsert по bot_id и external_id.
+      x-required-scope: subscribers:write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/Subscriber'
+        '200':
+          $ref: '#/components/responses/Subscriber'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /subscribers/{id}:
+    get:
+      operationId: getSubscriber
+      tags:
+      - Subscribers
+      summary: Получить подписчика
+      x-required-scope: subscribers:read
+      parameters:
+      - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          $ref: '#/components/responses/Subscriber'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      operationId: updateSubscriber
+      tags:
+      - Subscribers
+      summary: Обновить подписчика
+      x-required-scope: subscribers:write
+      parameters:
+      - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberUpdateRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Subscriber'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  responses:
+    Subscriber:
+      description: Подписчик.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubscriberResponse'
+    ServerError:
+      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    UnsupportedMediaType:
+      description: 'Для запроса с телом требуется Content-Type: application/json.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    ValidationFailed:
+      description: Поля запроса не прошли валидацию.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    BadRequest:
+      description: Повреждённый JSON или синтаксически неверный запрос.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Subscribers:
+      description: Пагинируемая коллекция подписчиков.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubscriberCollection'
+    Forbidden:
+      description: Нет нужного scope или доступа к организации.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    PayloadTooLarge:
+      description: Тело запроса превышает допустимый размер.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    RateLimited:
+      description: Превышен rate limit токена или операции.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    NotFound:
+      description: Ресурс не найден в доступном контуре.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+  parameters:
+    ChannelArray:
+      name: channel[]
+      in: query
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+    PerPage100:
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    Search:
+      name: q
+      in: query
+      schema:
+        type: string
+        maxLength: 255
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    GroupId:
+      name: group_id
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+    Direction:
+      name: direction
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    Tag:
+      name: tag
+      in: query
+      schema:
+        type: string
+        maxLength: 80
+    CreatedTo:
+      name: created_to
+      in: query
+      schema:
+        type: string
+        format: date
+    BotIdQuery:
+      name: bot_id
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+    CreatedFrom:
+      name: created_from
+      in: query
+      schema:
+        type: string
+        format: date
+    StatusArray:
+      name: status[]
+      in: query
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+    SortCreatedAt:
+      name: sort
+      in: query
+      schema:
+        type: string
+        enum:
+        - created_at
+        default: created_at
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+  schemas:
+    SubscriberCollection:
+      allOf:
+      - $ref: '#/components/schemas/CollectionEnvelope'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/Subscriber'
+    ResourceEnvelope:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+    SubscriberResponse:
+      allOf:
+      - $ref: '#/components/schemas/ResourceEnvelope'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/Subscriber'
+    Subscriber:
+      type: object
+      required:
+      - id
+      - organization_id
+      - bot_id
+      - channel
+      - external_id
+      - tags
+      properties:
+        id:
+          type: integer
+        organization_id:
+          type: integer
+        bot_id:
+          type: integer
+        channel:
+          type:
+          - string
+          - 'null'
+        external_id:
+          type: string
+        status:
+          type:
+          - string
+          - 'null'
+        username:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        phone:
+          type:
+          - string
+          - 'null'
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+        tags:
+          type: array
+          items:
+            type: string
+        groups:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        last_activity_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    ApiError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          - meta
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+            meta:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Идентификатор запроса для обращения в поддержку.
+              additionalProperties: true
+    SubscriberCreateRequest:
+      type: object
+      required:
+      - bot_id
+      - channel
+      - external_id
+      additionalProperties: false
+      properties:
+        bot_id:
+          type: integer
+          minimum: 1
+        channel:
+          type: string
+          maxLength: 191
+        external_id:
+          type: string
+          maxLength: 255
+        status:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        username:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        tags:
+          type:
+          - array
+          - 'null'
+          maxItems: 50
+          items:
+            type: string
+            maxLength: 64
+    SubscriberUpdateRequest:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        channel:
+          type: string
+          maxLength: 191
+        status:
+          type: string
+          maxLength: 50
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        username:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        tags:
+          type:
+          - array
+          - 'null'
+          maxItems: 50
+          items:
+            type: string
+            maxLength: 64
+    CollectionEnvelope:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        links:
+          type: object
+          additionalProperties: true
+        meta:
+          type: object
+          additionalProperties: true
+  headers:
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
+      schema:
+        type: string
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
+      schema:
+        type: integer
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
+      schema:
+        type: integer
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: AppsMax API token
+      description: 'Рекомендуемый вариант: Authorization: Bearer YOUR_API_TOKEN'
+    apiTokenHeader:
+      type: apiKey
+      in: header
+      name: X-Api-Token
+      description: Fallback для клиентов без Bearer auth. Не передавайте токен в URL.
+externalDocs:
+  description: Документация и ограничения
+  url: https://appsmax.ru/developers/
+x-appsmax-verified-at: '2026-08-09'
+x-appsmax-default-rate-limit-per-minute: 60
+x-appsmax-public-sdk: false
+x-appsmax-webhooks-covered: false

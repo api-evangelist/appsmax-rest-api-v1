@@ -1,0 +1,57 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AppsMax REST Interactive menu API",
+    "version": "1.1.1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Interactive menu",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Получить элементы интерактивного меню",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://telegram.appsmax.ru/api/v1/interactive-menu",
+            "params": [
+              {
+                "name": "bot_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "active",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Получить элементы интерактивного меню"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

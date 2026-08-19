@@ -1,0 +1,41 @@
+{
+  "provider": "appsmax-rest-api-v1",
+  "sources": [
+    "appsmax-rest-api-v1-access-api-openapi.yml",
+    "appsmax-rest-api-v1-applications-api-openapi.yml",
+    "appsmax-rest-api-v1-bots-api-openapi.yml",
+    "appsmax-rest-api-v1-campaigns-api-openapi.yml",
+    "appsmax-rest-api-v1-funnels-api-openapi.yml",
+    "appsmax-rest-api-v1-interactive-menu-api-openapi.yml",
+    "appsmax-rest-api-v1-miniapps-api-openapi.yml",
+    "appsmax-rest-api-v1-organizations-api-openapi.yml",
+    "appsmax-rest-api-v1-subscribers-api-openapi.yml"
+  ],
+  "outputs": [
+    "appsmax-rest-api-v1-access-api-openapi.yml",
+    "appsmax-rest-api-v1-applications-api-openapi.yml",
+    "appsmax-rest-api-v1-bots-api-openapi.yml",
+    "appsmax-rest-api-v1-campaigns-api-openapi.yml",
+    "appsmax-rest-api-v1-funnels-api-openapi.yml",
+    "appsmax-rest-api-v1-interactive-menu-api-openapi.yml",
+    "appsmax-rest-api-v1-miniapps-api-openapi.yml",
+    "appsmax-rest-api-v1-organizations-api-openapi.yml",
+    "appsmax-rest-api-v1-subscribers-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "appsmax-rest-api-v1-access-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "appsmax-rest-api-v1-applications-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "appsmax-rest-api-v1-bots-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "appsmax-rest-api-v1-campaigns-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "appsmax-rest-api-v1-funnels-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "appsmax-rest-api-v1-interactive-menu-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "appsmax-rest-api-v1-miniapps-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "appsmax-rest-api-v1-organizations-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "appsmax-rest-api-v1-subscribers-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": []
+}

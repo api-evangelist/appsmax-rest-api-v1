@@ -1,0 +1,93 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AppsMax REST Bots API",
+    "version": "1.1.1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Bots",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Получить ботов",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://telegram.appsmax.ru/api/v1/bots",
+            "params": [
+              {
+                "name": "driver",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Получить ботов"
+        },
+        {
+          "info": {
+            "name": "Получить бота",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://telegram.appsmax.ru/api/v1/bots/:bot",
+            "params": [
+              {
+                "name": "bot",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Получить бота"
+        },
+        {
+          "info": {
+            "name": "Получить подключения бота",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://telegram.appsmax.ru/api/v1/bots/:bot/connections",
+            "params": [
+              {
+                "name": "bot",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Получить подключения бота"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

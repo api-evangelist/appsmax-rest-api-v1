@@ -1,0 +1,144 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AppsMax REST Campaigns API",
+    "version": "1.1.1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Campaigns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Получить кампании",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://telegram.appsmax.ru/api/v1/campaigns",
+            "params": [
+              {
+                "name": "bot_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status[]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "type[]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_from",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_to",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "direction",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Получить кампании"
+        },
+        {
+          "info": {
+            "name": "Создать кампанию",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://telegram.appsmax.ru/api/v1/campaigns",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Создаёт черновик или запланированную запись. Для запуска используется отдельный POST /campaigns/{id}/run."
+        },
+        {
+          "info": {
+            "name": "Получить кампанию",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://telegram.appsmax.ru/api/v1/campaigns/:campaign",
+            "params": [
+              {
+                "name": "campaign",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Получить кампанию"
+        },
+        {
+          "info": {
+            "name": "Запустить кампанию",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://telegram.appsmax.ru/api/v1/campaigns/:id/run",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Переводит черновик в состояние запуска/планирования. Перед вызовом интегратор отвечает за аудиторию, согласия, содержание и правила канала."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

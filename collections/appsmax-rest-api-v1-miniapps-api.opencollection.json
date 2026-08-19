@@ -1,0 +1,57 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AppsMax REST Miniapps API",
+    "version": "1.1.1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Miniapps",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Получить мини-приложения",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://telegram.appsmax.ru/api/v1/miniapps",
+            "params": [
+              {
+                "name": "bot_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Получить мини-приложения"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

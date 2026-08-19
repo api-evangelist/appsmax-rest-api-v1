@@ -1,0 +1,35 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AppsMax REST Organizations API",
+    "version": "1.1.1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Organizations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Получить текущую организацию",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://telegram.appsmax.ru/api/v1/organizations"
+          },
+          "docs": "Получить текущую организацию"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

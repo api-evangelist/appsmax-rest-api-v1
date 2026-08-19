@@ -1,0 +1,337 @@
+openapi: 3.2.0
+info:
+  title: AppsMax REST Interactive menu API
+  version: 1.1.1
+  description: Публичный server-to-server контракт REST API AppsMax v1. Это API платформы AppsMax, а не официальный API MAX или Telegram. Все ответы API имеют JSON-формат, X-Request-Id и запрет кеширования. Проверено по production-маршрутам, валидации и synthetic acceptance 2026-08-09.
+  contact:
+    name: AppsMax
+    url: https://appsmax.ru/contacts/
+    email: info@appsmax.ru
+  license:
+    name: AppsMax API Terms
+    url: https://appsmax.ru/documents/
+servers:
+- url: https://telegram.appsmax.ru/api/v1
+  description: Production API v1
+security:
+- bearerAuth: []
+- apiTokenHeader: []
+tags:
+- name: Interactive menu
+  description: Элементы интерактивного меню ботов.
+paths:
+  /interactive-menu:
+    get:
+      operationId: listInteractiveMenuItems
+      tags:
+      - Interactive menu
+      summary: Получить элементы интерактивного меню
+      x-required-scope: interactive_menu:read
+      parameters:
+      - $ref: '#/components/parameters/BotIdQuery'
+      - $ref: '#/components/parameters/Active'
+      - $ref: '#/components/parameters/PerPage200'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          $ref: '#/components/responses/InteractiveMenu'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  responses:
+    ServerError:
+      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    ValidationFailed:
+      description: Поля запроса не прошли валидацию.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Forbidden:
+      description: Нет нужного scope или доступа к организации.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    RateLimited:
+      description: Превышен rate limit токена или операции.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    NotFound:
+      description: Ресурс не найден в доступном контуре.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    InteractiveMenu:
+      description: Пагинируемая коллекция элементов меню.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InteractiveMenuCollection'
+  parameters:
+    Active:
+      name: active
+      in: query
+      schema:
+        type: boolean
+    BotIdQuery:
+      name: bot_id
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+    PerPage200:
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+  headers:
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
+      schema:
+        type: string
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
+      schema:
+        type: integer
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
+      schema:
+        type: integer
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+  schemas:
+    ApiError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          - meta
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+            meta:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Идентификатор запроса для обращения в поддержку.
+              additionalProperties: true
+    InteractiveMenuCollection:
+      allOf:
+      - $ref: '#/components/schemas/CollectionEnvelope'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/InteractiveMenuItem'
+    CollectionEnvelope:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        links:
+          type: object
+          additionalProperties: true
+        meta:
+          type: object
+          additionalProperties: true
+    InteractiveMenuItem:
+      type: object
+      required:
+      - id
+      - bot_id
+      - title
+      - active
+      - sort_order
+      properties:
+        id:
+          type: integer
+        bot_id:
+          type: integer
+        parent_id:
+          type:
+          - integer
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type: string
+        command:
+          type:
+          - string
+          - 'null'
+        trigger_text:
+          type:
+          - string
+          - 'null'
+        action:
+          type:
+          - string
+          - 'null'
+        payload:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        survey_template_id:
+          type:
+          - integer
+          - 'null'
+        linked_command_id:
+          type:
+          - integer
+          - 'null'
+        child_display_mode:
+          type:
+          - string
+          - 'null'
+        show_in_menu:
+          type:
+          - boolean
+          - 'null'
+        is_system:
+          type:
+          - boolean
+          - 'null'
+        active:
+          type: boolean
+        sort_order:
+          type: integer
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: AppsMax API token
+      description: 'Рекомендуемый вариант: Authorization: Bearer YOUR_API_TOKEN'
+    apiTokenHeader:
+      type: apiKey
+      in: header
+      name: X-Api-Token
+      description: Fallback для клиентов без Bearer auth. Не передавайте токен в URL.
+externalDocs:
+  description: Документация и ограничения
+  url: https://appsmax.ru/developers/
+x-appsmax-verified-at: '2026-08-09'
+x-appsmax-default-rate-limit-per-minute: 60
+x-appsmax-public-sdk: false
+x-appsmax-webhooks-covered: false

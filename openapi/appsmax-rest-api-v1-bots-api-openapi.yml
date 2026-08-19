@@ -1,0 +1,558 @@
+openapi: 3.2.0
+info:
+  title: AppsMax REST Bots API
+  version: 1.1.1
+  description: Публичный server-to-server контракт REST API AppsMax v1. Это API платформы AppsMax, а не официальный API MAX или Telegram. Все ответы API имеют JSON-формат, X-Request-Id и запрет кеширования. Проверено по production-маршрутам, валидации и synthetic acceptance 2026-08-09.
+  contact:
+    name: AppsMax
+    url: https://appsmax.ru/contacts/
+    email: info@appsmax.ru
+  license:
+    name: AppsMax API Terms
+    url: https://appsmax.ru/documents/
+servers:
+- url: https://telegram.appsmax.ru/api/v1
+  description: Production API v1
+security:
+- bearerAuth: []
+- apiTokenHeader: []
+tags:
+- name: Bots
+  description: Боты и их безопасные сведения о подключении без секретов.
+paths:
+  /bots:
+    get:
+      operationId: listBots
+      tags:
+      - Bots
+      summary: Получить ботов
+      x-required-scope: bots:read
+      parameters:
+      - $ref: '#/components/parameters/Driver'
+      - $ref: '#/components/parameters/StatusSingle'
+      - $ref: '#/components/parameters/PerPage100'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          $ref: '#/components/responses/Bots'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /bots/{bot}:
+    get:
+      operationId: getBot
+      tags:
+      - Bots
+      summary: Получить бота
+      x-required-scope: bots:read
+      parameters:
+      - $ref: '#/components/parameters/BotPath'
+      responses:
+        '200':
+          $ref: '#/components/responses/Bot'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /bots/{bot}/connections:
+    get:
+      operationId: listBotConnections
+      tags:
+      - Bots
+      summary: Получить подключения бота
+      x-required-scope: connections:read
+      parameters:
+      - $ref: '#/components/parameters/BotPath'
+      responses:
+        '200':
+          $ref: '#/components/responses/BotConnections'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  responses:
+    BotConnections:
+      description: Безопасные сведения о подключении бота.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BotConnectionCollection'
+    ServerError:
+      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    ValidationFailed:
+      description: Поля запроса не прошли валидацию.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Bot:
+      description: Бот без секретов подключения.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BotResponse'
+    Bots:
+      description: Пагинируемая коллекция ботов.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BotCollection'
+    Forbidden:
+      description: Нет нужного scope или доступа к организации.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    RateLimited:
+      description: Превышен rate limit токена или операции.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    NotFound:
+      description: Ресурс не найден в доступном контуре.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+  parameters:
+    PerPage100:
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    BotPath:
+      name: bot
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    Driver:
+      name: driver
+      in: query
+      schema:
+        type: string
+    StatusSingle:
+      name: status
+      in: query
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+  schemas:
+    ResourceEnvelope:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+    BotCollection:
+      allOf:
+      - $ref: '#/components/schemas/CollectionEnvelope'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/Bot'
+    Bot:
+      type: object
+      required:
+      - id
+      - organization_id
+      - name
+      - status
+      description: Безопасное представление бота. Секретный токен подключения никогда не возвращается.
+      properties:
+        id:
+          type: integer
+        public_id:
+          type:
+          - string
+          - 'null'
+        organization_id:
+          type: integer
+        driver:
+          type:
+          - string
+          - 'null'
+        name:
+          type: string
+        status:
+          type: string
+        telegram_username:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        short_description:
+          type:
+          - string
+          - 'null'
+        commands_menu_name:
+          type:
+          - string
+          - 'null'
+        interactive_menu_name:
+          type:
+          - string
+          - 'null'
+        interactive_menu_markup:
+          type:
+          - string
+          - 'null'
+        interactive_menu_columns:
+          type:
+          - integer
+          - 'null'
+        interactive_menu_show_back_button:
+          type:
+          - boolean
+          - 'null'
+        interactive_menu_show_home_button:
+          type:
+          - boolean
+          - 'null'
+        scenarios_active:
+          type:
+          - boolean
+          - 'null'
+        commands_active:
+          type:
+          - boolean
+          - 'null'
+        interactive_menu_active:
+          type:
+          - boolean
+          - 'null'
+        miniapps_active:
+          type:
+          - boolean
+          - 'null'
+        subscribers_active:
+          type:
+          - boolean
+          - 'null'
+        groups_active:
+          type:
+          - boolean
+          - 'null'
+        channels_active:
+          type:
+          - boolean
+          - 'null'
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    ApiError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          - meta
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+            meta:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Идентификатор запроса для обращения в поддержку.
+              additionalProperties: true
+    BotConnection:
+      type: object
+      required:
+      - bot_id
+      - driver
+      - status
+      properties:
+        bot_id:
+          type: integer
+        driver:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+        identifier:
+          type:
+          - string
+          - 'null'
+        profile:
+          type:
+          - object
+          - 'null'
+          oneOf:
+          - $ref: '#/components/schemas/TelegramBotConnectionProfile'
+          - $ref: '#/components/schemas/MaxBotConnectionProfile'
+        last_synced_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    MaxBotConnectionProfile:
+      type: object
+      additionalProperties: false
+      properties:
+        user_id:
+          type:
+          - integer
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        username:
+          type:
+          - string
+          - 'null'
+    BotResponse:
+      allOf:
+      - $ref: '#/components/schemas/ResourceEnvelope'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/Bot'
+    BotConnectionCollection:
+      allOf:
+      - $ref: '#/components/schemas/CollectionEnvelope'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/BotConnection'
+    CollectionEnvelope:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        links:
+          type: object
+          additionalProperties: true
+        meta:
+          type: object
+          additionalProperties: true
+    TelegramBotConnectionProfile:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        username:
+          type:
+          - string
+          - 'null'
+        first_name:
+          type:
+          - string
+          - 'null'
+        last_name:
+          type:
+          - string
+          - 'null'
+        is_bot:
+          type:
+          - boolean
+          - 'null'
+        can_join_groups:
+          type:
+          - boolean
+          - 'null'
+        can_read_all_group_messages:
+          type:
+          - boolean
+          - 'null'
+        supports_inline_queries:
+          type:
+          - boolean
+          - 'null'
+        can_connect_to_business:
+          type:
+          - boolean
+          - 'null'
+        has_main_web_app:
+          type:
+          - boolean
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        short_description:
+          type:
+          - string
+          - 'null'
+  headers:
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
+      schema:
+        type: string
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
+      schema:
+        type: integer
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
+      schema:
+        type: integer
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: AppsMax API token
+      description: 'Рекомендуемый вариант: Authorization: Bearer YOUR_API_TOKEN'
+    apiTokenHeader:
+      type: apiKey
+      in: header
+      name: X-Api-Token
+      description: Fallback для клиентов без Bearer auth. Не передавайте токен в URL.
+externalDocs:
+  description: Документация и ограничения
+  url: https://appsmax.ru/developers/
+x-appsmax-verified-at: '2026-08-09'
+x-appsmax-default-rate-limit-per-minute: 60
+x-appsmax-public-sdk: false
+x-appsmax-webhooks-covered: false
