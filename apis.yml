@@ -23,7 +23,7 @@ image: https://appsmax.ru/wp-content/themes/appsmax-site/assets/img/logo-appsmax
 url: https://raw.githubusercontent.com/api-evangelist/appsmax-rest-api-v1/refs/heads/main/apis.yml
 type: Index
 kind: company
-specificationVersion: '0.21'
+specificationVersion: '0.23'
 created: '2026-07-31'
 modified: '2026-08-09'
 x-type: company
