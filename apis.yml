@@ -34,6 +34,18 @@ x-evidence:
   verified: '2026-08-01'
 tags:
   - Company
+  - Software-as-a-Service
+  - Messaging
+  - Business Automation
+  - Chatbots
+  - Mini Apps
+  - Customer Requests
+  - Workflow-Automation
+  - MAX
+  - Telegram
+  - Russian Language
+tags_raw:
+  - Company
   - SaaS
   - Messaging
   - Business Automation
@@ -81,6 +93,8 @@ apis:
   humanURL: https://appsmax.ru/developers/
   baseURL: https://telegram.appsmax.ru/api/v1
   tags:
+  - Application
+  tags_raw:
   - Applications
   properties:
   - type: OpenAPI
@@ -231,6 +245,8 @@ apis:
   humanURL: https://appsmax.ru/developers/
   baseURL: https://telegram.appsmax.ru/api/v1
   tags:
+  - Mini Apps
+  tags_raw:
   - Miniapps
   properties:
   - type: OpenAPI
@@ -261,6 +277,8 @@ apis:
   humanURL: https://appsmax.ru/developers/
   baseURL: https://telegram.appsmax.ru/api/v1
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
