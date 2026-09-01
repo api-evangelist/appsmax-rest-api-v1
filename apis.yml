@@ -257,7 +257,7 @@ apis:
   humanURL: https://appsmax.ru/developers/
   baseURL: https://telegram.appsmax.ru/api/v1
   tags:
-  - Miniapps
+  - Mini Apps
   tags_raw:
   - Miniapps
   properties:
