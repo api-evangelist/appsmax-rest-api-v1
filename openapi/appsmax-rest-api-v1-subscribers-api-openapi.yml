@@ -149,139 +149,13 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
-  responses:
-    Subscriber:
-      description: Подписчик.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SubscriberResponse'
-    ServerError:
-      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    Unauthorized:
-      description: Токен отсутствует, недействителен или отозван.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    UnsupportedMediaType:
-      description: 'Для запроса с телом требуется Content-Type: application/json.'
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    ValidationFailed:
-      description: Поля запроса не прошли валидацию.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    BadRequest:
-      description: Повреждённый JSON или синтаксически неверный запрос.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    Subscribers:
-      description: Пагинируемая коллекция подписчиков.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SubscriberCollection'
-    Forbidden:
-      description: Нет нужного scope или доступа к организации.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    PayloadTooLarge:
-      description: Тело запроса превышает допустимый размер.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    RateLimited:
-      description: Превышен rate limit токена или операции.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        X-RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        X-RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimitRemaining'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    NotFound:
-      description: Ресурс не найден в доступном контуре.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
   parameters:
+    GroupId:
+      name: group_id
+      in: query
+      schema:
+        type: integer
+        minimum: 1
     ChannelArray:
       name: channel[]
       in: query
@@ -291,19 +165,12 @@ components:
         type: array
         items:
           type: string
-    PerPage100:
-      name: per_page
+    BotIdQuery:
+      name: bot_id
       in: query
       schema:
         type: integer
         minimum: 1
-        maximum: 100
-    Search:
-      name: q
-      in: query
-      schema:
-        type: string
-        maxLength: 255
     IdPath:
       name: id
       in: path
@@ -311,45 +178,6 @@ components:
       schema:
         type: integer
         minimum: 1
-    GroupId:
-      name: group_id
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-    Direction:
-      name: direction
-      in: query
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-        default: desc
-    Tag:
-      name: tag
-      in: query
-      schema:
-        type: string
-        maxLength: 80
-    CreatedTo:
-      name: created_to
-      in: query
-      schema:
-        type: string
-        format: date
-    BotIdQuery:
-      name: bot_id
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-    CreatedFrom:
-      name: created_from
-      in: query
-      schema:
-        type: string
-        format: date
     StatusArray:
       name: status[]
       in: query
@@ -359,6 +187,18 @@ components:
         type: array
         items:
           type: string
+    Tag:
+      name: tag
+      in: query
+      schema:
+        type: string
+        maxLength: 80
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
     SortCreatedAt:
       name: sort
       in: query
@@ -367,12 +207,40 @@ components:
         enum:
         - created_at
         default: created_at
-    Page:
-      name: page
+    CreatedFrom:
+      name: created_from
+      in: query
+      schema:
+        type: string
+        format: date
+    Direction:
+      name: direction
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    Search:
+      name: q
+      in: query
+      schema:
+        type: string
+        maxLength: 255
+    CreatedTo:
+      name: created_to
+      in: query
+      schema:
+        type: string
+        format: date
+    PerPage100:
+      name: per_page
       in: query
       schema:
         type: integer
         minimum: 1
+        maximum: 100
   schemas:
     SubscriberCollection:
       allOf:
@@ -391,13 +259,22 @@ components:
         data:
           type: object
           additionalProperties: true
-    SubscriberResponse:
-      allOf:
-      - $ref: '#/components/schemas/ResourceEnvelope'
-      - type: object
-        properties:
-          data:
-            $ref: '#/components/schemas/Subscriber'
+    CollectionEnvelope:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        links:
+          type: object
+          additionalProperties: true
+        meta:
+          type: object
+          additionalProperties: true
     Subscriber:
       type: object
       required:
@@ -465,6 +342,13 @@ components:
           - string
           - 'null'
           format: date-time
+    SubscriberResponse:
+      allOf:
+      - $ref: '#/components/schemas/ResourceEnvelope'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/Subscriber'
     ApiError:
       type: object
       required:
@@ -493,6 +377,35 @@ components:
                   type: string
                   description: Идентификатор запроса для обращения в поддержку.
               additionalProperties: true
+    SubscriberUpdateRequest:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        channel:
+          type: string
+          maxLength: 191
+        status:
+          type: string
+          maxLength: 50
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        username:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        tags:
+          type:
+          - array
+          - 'null'
+          maxItems: 50
+          items:
+            type: string
+            maxLength: 64
     SubscriberCreateRequest:
       type: object
       required:
@@ -533,62 +446,158 @@ components:
           items:
             type: string
             maxLength: 64
-    SubscriberUpdateRequest:
-      type: object
-      additionalProperties: false
-      minProperties: 1
-      properties:
-        channel:
-          type: string
-          maxLength: 191
-        status:
-          type: string
-          maxLength: 50
-        name:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        username:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        tags:
-          type:
-          - array
-          - 'null'
-          maxItems: 50
-          items:
-            type: string
-            maxLength: 64
-    CollectionEnvelope:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        links:
-          type: object
-          additionalProperties: true
-        meta:
-          type: object
-          additionalProperties: true
+  responses:
+    ServerError:
+      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Subscriber:
+      description: Подписчик.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubscriberResponse'
+    Forbidden:
+      description: Нет нужного scope или доступа к организации.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Subscribers:
+      description: Пагинируемая коллекция подписчиков.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubscriberCollection'
+    NotFound:
+      description: Ресурс не найден в доступном контуре.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    ValidationFailed:
+      description: Поля запроса не прошли валидацию.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    UnsupportedMediaType:
+      description: 'Для запроса с телом требуется Content-Type: application/json.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    PayloadTooLarge:
+      description: Тело запроса превышает допустимый размер.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    BadRequest:
+      description: Повреждённый JSON или синтаксически неверный запрос.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    RateLimited:
+      description: Превышен rate limit токена или операции.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
   headers:
     RequestId:
       description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
       schema:
         type: string
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
     RateLimitRemaining:
       description: Оставшееся число запросов в текущем окне.
       schema:
         type: integer
-    RetryAfter:
-      description: Число секунд до повторной попытки.
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
       schema:
         type: integer
     ApiVersion:
@@ -596,15 +605,6 @@ components:
       schema:
         type: string
         example: v1
-    RateLimitLimit:
-      description: Лимит запросов в текущем окне.
-      schema:
-        type: integer
-    CacheControl:
-      description: Ответы API не должны кешироваться.
-      schema:
-        type: string
-        example: no-store, private
   securitySchemes:
     bearerAuth:
       type: http
