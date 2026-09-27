@@ -52,7 +52,7 @@ tags:
   - Chatbots
   - Mini Apps
   - Customer Requests
-  - Workflow-Automation
+  - Workflow Automation
   - MAX
   - Telegram
   - Russian Language
@@ -68,6 +68,7 @@ tags_raw:
   - MAX
   - Telegram
   - Russian Language
+  - Workflow-Automation
 apis:
 - aid: appsmax-rest-api-v1:appsmax-rest-api-v1-access-api
   name: AppsMax Access API
