@@ -90,254 +90,7 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
-  headers:
-    RateLimitRemaining:
-      description: Оставшееся число запросов в текущем окне.
-      schema:
-        type: integer
-    CacheControl:
-      description: Ответы API не должны кешироваться.
-      schema:
-        type: string
-        example: no-store, private
-    RateLimitLimit:
-      description: Лимит запросов в текущем окне.
-      schema:
-        type: integer
-    ApiVersion:
-      description: Фактическая версия API.
-      schema:
-        type: string
-        example: v1
-    RequestId:
-      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
-      schema:
-        type: string
-    RetryAfter:
-      description: Число секунд до повторной попытки.
-      schema:
-        type: integer
-  responses:
-    ServerError:
-      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    Bots:
-      description: Пагинируемая коллекция ботов.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BotCollection'
-    Unauthorized:
-      description: Токен отсутствует, недействителен или отозван.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    Forbidden:
-      description: Нет нужного scope или доступа к организации.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    NotFound:
-      description: Ресурс не найден в доступном контуре.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    RateLimited:
-      description: Превышен rate limit токена или операции.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        X-RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        X-RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimitRemaining'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    BotConnections:
-      description: Безопасные сведения о подключении бота.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BotConnectionCollection'
-    Bot:
-      description: Бот без секретов подключения.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BotResponse'
-    ValidationFailed:
-      description: Поля запроса не прошли валидацию.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-  parameters:
-    PerPage100:
-      name: per_page
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-    Driver:
-      name: driver
-      in: query
-      schema:
-        type: string
-    StatusSingle:
-      name: status
-      in: query
-      schema:
-        type: string
-    BotPath:
-      name: bot
-      in: path
-      required: true
-      schema:
-        type: integer
-        minimum: 1
   schemas:
-    ResourceEnvelope:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: object
-          additionalProperties: true
-    ApiError:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          - meta
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details:
-              type: object
-              additionalProperties: true
-            meta:
-              type: object
-              required:
-              - request_id
-              properties:
-                request_id:
-                  type: string
-                  description: Идентификатор запроса для обращения в поддержку.
-              additionalProperties: true
-    MaxBotConnectionProfile:
-      type: object
-      additionalProperties: false
-      properties:
-        user_id:
-          type:
-          - integer
-          - 'null'
-        name:
-          type:
-          - string
-          - 'null'
-        username:
-          type:
-          - string
-          - 'null'
-    BotCollection:
-      allOf:
-      - $ref: '#/components/schemas/CollectionEnvelope'
-      - type: object
-        properties:
-          data:
-            type: array
-            items:
-              $ref: '#/components/schemas/Bot'
-    CollectionEnvelope:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        links:
-          type: object
-          additionalProperties: true
-        meta:
-          type: object
-          additionalProperties: true
     Bot:
       type: object
       required:
@@ -437,6 +190,29 @@ components:
           - string
           - 'null'
           format: date-time
+    BotResponse:
+      allOf:
+      - $ref: '#/components/schemas/ResourceEnvelope'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/Bot'
+    CollectionEnvelope:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        links:
+          type: object
+          additionalProperties: true
+        meta:
+          type: object
+          additionalProperties: true
     BotConnectionCollection:
       allOf:
       - $ref: '#/components/schemas/CollectionEnvelope'
@@ -446,39 +222,39 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/BotConnection'
-    BotConnection:
+    BotCollection:
+      allOf:
+      - $ref: '#/components/schemas/CollectionEnvelope'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/Bot'
+    ResourceEnvelope:
       type: object
       required:
-      - bot_id
-      - driver
-      - status
+      - data
       properties:
-        bot_id:
-          type: integer
-        driver:
+        data:
+          type: object
+          additionalProperties: true
+    MaxBotConnectionProfile:
+      type: object
+      additionalProperties: false
+      properties:
+        user_id:
+          type:
+          - integer
+          - 'null'
+        name:
           type:
           - string
           - 'null'
-        status:
+        username:
           type:
           - string
           - 'null'
-        identifier:
-          type:
-          - string
-          - 'null'
-        profile:
-          type:
-          - object
-          - 'null'
-          oneOf:
-          - $ref: '#/components/schemas/TelegramBotConnectionProfile'
-          - $ref: '#/components/schemas/MaxBotConnectionProfile'
-        last_synced_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
     TelegramBotConnectionProfile:
       type: object
       additionalProperties: false
@@ -531,13 +307,237 @@ components:
           type:
           - string
           - 'null'
-    BotResponse:
-      allOf:
-      - $ref: '#/components/schemas/ResourceEnvelope'
-      - type: object
-        properties:
-          data:
-            $ref: '#/components/schemas/Bot'
+    BotConnection:
+      type: object
+      required:
+      - bot_id
+      - driver
+      - status
+      properties:
+        bot_id:
+          type: integer
+        driver:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+        identifier:
+          type:
+          - string
+          - 'null'
+        profile:
+          type:
+          - object
+          - 'null'
+          oneOf:
+          - $ref: '#/components/schemas/TelegramBotConnectionProfile'
+          - $ref: '#/components/schemas/MaxBotConnectionProfile'
+        last_synced_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    ApiError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          - meta
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+            meta:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Идентификатор запроса для обращения в поддержку.
+              additionalProperties: true
+  responses:
+    ServerError:
+      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Forbidden:
+      description: Нет нужного scope или доступа к организации.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Bot:
+      description: Бот без секретов подключения.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BotResponse'
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    BotConnections:
+      description: Безопасные сведения о подключении бота.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BotConnectionCollection'
+    RateLimited:
+      description: Превышен rate limit токена или операции.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    NotFound:
+      description: Ресурс не найден в доступном контуре.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    ValidationFailed:
+      description: Поля запроса не прошли валидацию.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Bots:
+      description: Пагинируемая коллекция ботов.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BotCollection'
+  headers:
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
+      schema:
+        type: integer
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
+      schema:
+        type: integer
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
+      schema:
+        type: string
+  parameters:
+    BotPath:
+      name: bot
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    Driver:
+      name: driver
+      in: query
+      schema:
+        type: string
+    StatusSingle:
+      name: status
+      in: query
+      schema:
+        type: string
+    PerPage100:
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
   securitySchemes:
     bearerAuth:
       type: http

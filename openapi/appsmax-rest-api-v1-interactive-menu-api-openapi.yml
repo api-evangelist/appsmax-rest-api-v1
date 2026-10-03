@@ -48,173 +48,16 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
-  headers:
-    RateLimitRemaining:
-      description: Оставшееся число запросов в текущем окне.
-      schema:
-        type: integer
-    CacheControl:
-      description: Ответы API не должны кешироваться.
-      schema:
-        type: string
-        example: no-store, private
-    RateLimitLimit:
-      description: Лимит запросов в текущем окне.
-      schema:
-        type: integer
-    ApiVersion:
-      description: Фактическая версия API.
-      schema:
-        type: string
-        example: v1
-    RequestId:
-      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
-      schema:
-        type: string
-    RetryAfter:
-      description: Число секунд до повторной попытки.
-      schema:
-        type: integer
-  responses:
-    ServerError:
-      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    Unauthorized:
-      description: Токен отсутствует, недействителен или отозван.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    Forbidden:
-      description: Нет нужного scope или доступа к организации.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    NotFound:
-      description: Ресурс не найден в доступном контуре.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    RateLimited:
-      description: Превышен rate limit токена или операции.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        X-RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        X-RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimitRemaining'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    InteractiveMenu:
-      description: Пагинируемая коллекция элементов меню.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InteractiveMenuCollection'
-    ValidationFailed:
-      description: Поля запроса не прошли валидацию.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-  parameters:
-    BotIdQuery:
-      name: bot_id
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-    Active:
-      name: active
-      in: query
-      schema:
-        type: boolean
-    PerPage200:
-      name: per_page
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 200
   schemas:
-    ApiError:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          - meta
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details:
-              type: object
-              additionalProperties: true
-            meta:
-              type: object
-              required:
-              - request_id
-              properties:
-                request_id:
-                  type: string
-                  description: Идентификатор запроса для обращения в поддержку.
-              additionalProperties: true
+    InteractiveMenuCollection:
+      allOf:
+      - $ref: '#/components/schemas/CollectionEnvelope'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/InteractiveMenuItem'
     CollectionEnvelope:
       type: object
       required:
@@ -308,15 +151,172 @@ components:
           - string
           - 'null'
           format: date-time
-    InteractiveMenuCollection:
-      allOf:
-      - $ref: '#/components/schemas/CollectionEnvelope'
-      - type: object
-        properties:
-          data:
-            type: array
-            items:
-              $ref: '#/components/schemas/InteractiveMenuItem'
+    ApiError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          - meta
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+            meta:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Идентификатор запроса для обращения в поддержку.
+              additionalProperties: true
+  responses:
+    ServerError:
+      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Forbidden:
+      description: Нет нужного scope или доступа к организации.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    InteractiveMenu:
+      description: Пагинируемая коллекция элементов меню.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InteractiveMenuCollection'
+    RateLimited:
+      description: Превышен rate limit токена или операции.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    NotFound:
+      description: Ресурс не найден в доступном контуре.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    ValidationFailed:
+      description: Поля запроса не прошли валидацию.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+  headers:
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
+      schema:
+        type: integer
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
+      schema:
+        type: integer
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
+      schema:
+        type: string
+  parameters:
+    BotIdQuery:
+      name: bot_id
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+    PerPage200:
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+    Active:
+      name: active
+      in: query
+      schema:
+        type: boolean
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
   securitySchemes:
     bearerAuth:
       type: http

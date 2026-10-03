@@ -66,38 +66,6 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
-  headers:
-    RateLimitRemaining:
-      description: Оставшееся число запросов в текущем окне.
-      schema:
-        type: integer
-    CacheControl:
-      description: Ответы API не должны кешироваться.
-      schema:
-        type: string
-        example: no-store, private
-    ApiVersion:
-      description: Фактическая версия API.
-      schema:
-        type: string
-        example: v1
-    RateLimitLimit:
-      description: Лимит запросов в текущем окне.
-      schema:
-        type: integer
-    Pragma:
-      description: Совместимый запрет кеширования для legacy-прокси.
-      schema:
-        type: string
-        example: no-cache
-    RequestId:
-      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
-      schema:
-        type: string
-    RetryAfter:
-      description: Число секунд до повторной попытки.
-      schema:
-        type: integer
   schemas:
     ApiTokenContext:
       type: object
@@ -221,14 +189,52 @@ components:
               $ref: '#/components/schemas/ApiTokenContext'
             organization:
               $ref: '#/components/schemas/Organization'
+  headers:
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
+      schema:
+        type: integer
+    Pragma:
+      description: Совместимый запрет кеширования для legacy-прокси.
+      schema:
+        type: string
+        example: no-cache
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
+      schema:
+        type: string
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
+      schema:
+        type: integer
   responses:
-    ServerError:
-      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
+    RateLimited:
+      description: Превышен rate limit токена или операции.
       headers:
         X-Request-Id:
           $ref: '#/components/headers/RequestId'
         X-Api-Version:
           $ref: '#/components/headers/ApiVersion'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
       content:
         application/json:
           schema:
@@ -248,25 +254,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/MeResponse'
-    RateLimited:
-      description: Превышен rate limit токена или операции.
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
       headers:
         X-Request-Id:
           $ref: '#/components/headers/RequestId'
         X-Api-Version:
           $ref: '#/components/headers/ApiVersion'
-        X-RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        X-RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimitRemaining'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiError'
-    Unauthorized:
-      description: Токен отсутствует, недействителен или отозван.
+    ServerError:
+      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
       headers:
         X-Request-Id:
           $ref: '#/components/headers/RequestId'

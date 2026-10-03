@@ -48,60 +48,9 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
-  headers:
-    RateLimitRemaining:
-      description: Оставшееся число запросов в текущем окне.
-      schema:
-        type: integer
-    CacheControl:
-      description: Ответы API не должны кешироваться.
-      schema:
-        type: string
-        example: no-store, private
-    RateLimitLimit:
-      description: Лимит запросов в текущем окне.
-      schema:
-        type: integer
-    ApiVersion:
-      description: Фактическая версия API.
-      schema:
-        type: string
-        example: v1
-    RequestId:
-      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
-      schema:
-        type: string
-    RetryAfter:
-      description: Число секунд до повторной попытки.
-      schema:
-        type: integer
   responses:
     ServerError:
       description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    Miniapps:
-      description: Пагинируемая коллекция мини-приложений.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MiniappCollection'
-    Unauthorized:
-      description: Токен отсутствует, недействителен или отозван.
       headers:
         X-Request-Id:
           $ref: '#/components/headers/RequestId'
@@ -122,8 +71,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiError'
-    NotFound:
-      description: Ресурс не найден в доступном контуре.
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
       headers:
         X-Request-Id:
           $ref: '#/components/headers/RequestId'
@@ -150,6 +99,30 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiError'
+    Miniapps:
+      description: Пагинируемая коллекция мини-приложений.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MiniappCollection'
+    NotFound:
+      description: Ресурс не найден в доступном контуре.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
     ValidationFailed:
       description: Поля запроса не прошли валидацию.
       headers:
@@ -161,60 +134,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiError'
-  parameters:
-    BotIdQuery:
-      name: bot_id
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-    PerPage100:
-      name: per_page
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-    StatusSingle:
-      name: status
-      in: query
-      schema:
-        type: string
   schemas:
-    ApiError:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          - meta
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details:
-              type: object
-              additionalProperties: true
-            meta:
-              type: object
-              required:
-              - request_id
-              properties:
-                request_id:
-                  type: string
-                  description: Идентификатор запроса для обращения в поддержку.
-              additionalProperties: true
     CollectionEnvelope:
       type: object
       required:
@@ -231,15 +151,6 @@ components:
         meta:
           type: object
           additionalProperties: true
-    MiniappCollection:
-      allOf:
-      - $ref: '#/components/schemas/CollectionEnvelope'
-      - type: object
-        properties:
-          data:
-            type: array
-            items:
-              $ref: '#/components/schemas/Miniapp'
     Miniapp:
       type: object
       required:
@@ -278,6 +189,95 @@ components:
           - string
           - 'null'
           format: date-time
+    MiniappCollection:
+      allOf:
+      - $ref: '#/components/schemas/CollectionEnvelope'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/Miniapp'
+    ApiError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          - meta
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+            meta:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Идентификатор запроса для обращения в поддержку.
+              additionalProperties: true
+  headers:
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
+      schema:
+        type: integer
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
+      schema:
+        type: integer
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
+      schema:
+        type: string
+  parameters:
+    BotIdQuery:
+      name: bot_id
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+    StatusSingle:
+      name: status
+      in: query
+      schema:
+        type: string
+    PerPage100:
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
   securitySchemes:
     bearerAuth:
       type: http
