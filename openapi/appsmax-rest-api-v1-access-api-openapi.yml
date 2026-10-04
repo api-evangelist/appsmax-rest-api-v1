@@ -66,7 +66,135 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
+  responses:
+    RateLimited:
+      description: Превышен rate limit токена или операции.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Me:
+      description: Контекст текущего токена.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Pragma:
+          $ref: '#/components/headers/Pragma'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MeResponse'
+    ServerError:
+      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+  headers:
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
+      schema:
+        type: integer
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
+      schema:
+        type: integer
+    Pragma:
+      description: Совместимый запрет кеширования для legacy-прокси.
+      schema:
+        type: string
+        example: no-cache
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
+      schema:
+        type: string
   schemas:
+    PingResponse:
+      type: object
+      required:
+      - status
+      - organization_id
+      properties:
+        status:
+          type: string
+          example: ok
+        organization_id:
+          type:
+          - integer
+          - 'null'
+    ApiError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          - meta
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+            meta:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Идентификатор запроса для обращения в поддержку.
+              additionalProperties: true
     ApiTokenContext:
       type: object
       required:
@@ -91,19 +219,6 @@ components:
           - string
           - 'null'
           format: date-time
-    PingResponse:
-      type: object
-      required:
-      - status
-      - organization_id
-      properties:
-        status:
-          type: string
-          example: ok
-        organization_id:
-          type:
-          - integer
-          - 'null'
     Organization:
       type: object
       required:
@@ -146,34 +261,6 @@ components:
           - string
           - 'null'
           format: date-time
-    ApiError:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          - meta
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details:
-              type: object
-              additionalProperties: true
-            meta:
-              type: object
-              required:
-              - request_id
-              properties:
-                request_id:
-                  type: string
-                  description: Идентификатор запроса для обращения в поддержку.
-              additionalProperties: true
     MeResponse:
       type: object
       required:
@@ -189,93 +276,6 @@ components:
               $ref: '#/components/schemas/ApiTokenContext'
             organization:
               $ref: '#/components/schemas/Organization'
-  headers:
-    CacheControl:
-      description: Ответы API не должны кешироваться.
-      schema:
-        type: string
-        example: no-store, private
-    RateLimitLimit:
-      description: Лимит запросов в текущем окне.
-      schema:
-        type: integer
-    Pragma:
-      description: Совместимый запрет кеширования для legacy-прокси.
-      schema:
-        type: string
-        example: no-cache
-    ApiVersion:
-      description: Фактическая версия API.
-      schema:
-        type: string
-        example: v1
-    RequestId:
-      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
-      schema:
-        type: string
-    RetryAfter:
-      description: Число секунд до повторной попытки.
-      schema:
-        type: integer
-    RateLimitRemaining:
-      description: Оставшееся число запросов в текущем окне.
-      schema:
-        type: integer
-  responses:
-    RateLimited:
-      description: Превышен rate limit токена или операции.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        X-RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        X-RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimitRemaining'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    Me:
-      description: Контекст текущего токена.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-        Pragma:
-          $ref: '#/components/headers/Pragma'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MeResponse'
-    Unauthorized:
-      description: Токен отсутствует, недействителен или отозван.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    ServerError:
-      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
   securitySchemes:
     bearerAuth:
       type: http

@@ -147,310 +147,6 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
-  headers:
-    IdempotencyReplayed:
-      description: true, если возвращён результат ранее выполненного запроса; false при первоначальном создании.
-      schema:
-        type: string
-        enum:
-        - 'true'
-        - 'false'
-    CacheControl:
-      description: Ответы API не должны кешироваться.
-      schema:
-        type: string
-        example: no-store, private
-    ApiVersion:
-      description: Фактическая версия API.
-      schema:
-        type: string
-        example: v1
-    RetryAfter:
-      description: Число секунд до повторной попытки.
-      schema:
-        type: integer
-    RateLimitRemaining:
-      description: Оставшееся число запросов в текущем окне.
-      schema:
-        type: integer
-    RateLimitLimit:
-      description: Лимит запросов в текущем окне.
-      schema:
-        type: integer
-    RequestId:
-      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
-      schema:
-        type: string
-  parameters:
-    Direction:
-      name: direction
-      in: query
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-        default: desc
-    IdempotencyKey:
-      name: Idempotency-Key
-      in: header
-      required: false
-      description: 'Уникальный ключ повтора для безопасного retry. Один ключ нельзя использовать с другим телом запроса. Допустимы 1–128 символов: A-Z, a-z, 0-9, точка, подчёркивание, двоеточие и дефис.'
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 128
-        pattern: ^[A-Za-z0-9._:-]+$
-    StatusArray:
-      name: status[]
-      in: query
-      style: form
-      explode: true
-      schema:
-        type: array
-        items:
-          type: string
-    Search:
-      name: q
-      in: query
-      schema:
-        type: string
-        maxLength: 255
-    IdPath:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-        minimum: 1
-    CreatedFrom:
-      name: created_from
-      in: query
-      schema:
-        type: string
-        format: date
-    BotIdQuery:
-      name: bot_id
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-    CampaignPath:
-      name: campaign
-      in: path
-      required: true
-      schema:
-        type: integer
-        minimum: 1
-    TypeArray:
-      name: type[]
-      in: query
-      style: form
-      explode: true
-      schema:
-        type: array
-        items:
-          type: string
-    SortCreatedAt:
-      name: sort
-      in: query
-      schema:
-        type: string
-        enum:
-        - created_at
-        default: created_at
-    PerPage100:
-      name: per_page
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-    Page:
-      name: page
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-    CreatedTo:
-      name: created_to
-      in: query
-      schema:
-        type: string
-        format: date
-  responses:
-    ServerError:
-      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    Forbidden:
-      description: Нет нужного scope или доступа к организации.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    Conflict:
-      description: Idempotency-Key уже использован с другим запросом.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    UnsupportedMediaType:
-      description: 'Для запроса с телом требуется Content-Type: application/json.'
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    PayloadTooLarge:
-      description: Тело запроса превышает допустимый размер.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    BadRequest:
-      description: Повреждённый JSON или синтаксически неверный запрос.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    CampaignCreated:
-      description: Кампания создана.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-        Idempotency-Replayed:
-          $ref: '#/components/headers/IdempotencyReplayed'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CampaignResponse'
-    CampaignReplay:
-      description: Повтор ранее выполненного создания кампании.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-        Idempotency-Replayed:
-          $ref: '#/components/headers/IdempotencyReplayed'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CampaignResponse'
-    Campaigns:
-      description: Пагинируемая коллекция кампаний.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CampaignCollection'
-    Unauthorized:
-      description: Токен отсутствует, недействителен или отозван.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    RateLimited:
-      description: Превышен rate limit токена или операции.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        X-RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        X-RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimitRemaining'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    NotFound:
-      description: Ресурс не найден в доступном контуре.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    Campaign:
-      description: Кампания.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CampaignResponse'
-    ValidationFailed:
-      description: Поля запроса не прошли валидацию.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
   schemas:
     CampaignResponse:
       allOf:
@@ -459,22 +155,6 @@ components:
         properties:
           data:
             $ref: '#/components/schemas/Campaign'
-    CollectionEnvelope:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        links:
-          type: object
-          additionalProperties: true
-        meta:
-          type: object
-          additionalProperties: true
     CampaignCreateRequest:
       type: object
       required:
@@ -501,6 +181,14 @@ components:
           - string
           - 'null'
           format: date-time
+    ResourceEnvelope:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          additionalProperties: true
     Campaign:
       type: object
       required:
@@ -557,21 +245,20 @@ components:
           additionalProperties: true
         pending:
           type: integer
-    CampaignCollection:
-      allOf:
-      - $ref: '#/components/schemas/CollectionEnvelope'
-      - type: object
-        properties:
-          data:
-            type: array
-            items:
-              $ref: '#/components/schemas/Campaign'
-    ResourceEnvelope:
+    CollectionEnvelope:
       type: object
       required:
       - data
       properties:
         data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        links:
+          type: object
+          additionalProperties: true
+        meta:
           type: object
           additionalProperties: true
     ApiError:
@@ -602,6 +289,319 @@ components:
                   type: string
                   description: Идентификатор запроса для обращения в поддержку.
               additionalProperties: true
+    CampaignCollection:
+      allOf:
+      - $ref: '#/components/schemas/CollectionEnvelope'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/Campaign'
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    StatusArray:
+      name: status[]
+      in: query
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      description: 'Уникальный ключ повтора для безопасного retry. Один ключ нельзя использовать с другим телом запроса. Допустимы 1–128 символов: A-Z, a-z, 0-9, точка, подчёркивание, двоеточие и дефис.'
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+        pattern: ^[A-Za-z0-9._:-]+$
+    PerPage100:
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    Search:
+      name: q
+      in: query
+      schema:
+        type: string
+        maxLength: 255
+    SortCreatedAt:
+      name: sort
+      in: query
+      schema:
+        type: string
+        enum:
+        - created_at
+        default: created_at
+    CreatedTo:
+      name: created_to
+      in: query
+      schema:
+        type: string
+        format: date
+    TypeArray:
+      name: type[]
+      in: query
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+    CreatedFrom:
+      name: created_from
+      in: query
+      schema:
+        type: string
+        format: date
+    CampaignPath:
+      name: campaign
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    BotIdQuery:
+      name: bot_id
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+    Direction:
+      name: direction
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+  headers:
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
+      schema:
+        type: integer
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+    IdempotencyReplayed:
+      description: true, если возвращён результат ранее выполненного запроса; false при первоначальном создании.
+      schema:
+        type: string
+        enum:
+        - 'true'
+        - 'false'
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
+      schema:
+        type: integer
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: Ресурс не найден в доступном контуре.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    PayloadTooLarge:
+      description: Тело запроса превышает допустимый размер.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    UnsupportedMediaType:
+      description: 'Для запроса с телом требуется Content-Type: application/json.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Campaign:
+      description: Кампания.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CampaignResponse'
+    RateLimited:
+      description: Превышен rate limit токена или операции.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    CampaignReplay:
+      description: Повтор ранее выполненного создания кампании.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Idempotency-Replayed:
+          $ref: '#/components/headers/IdempotencyReplayed'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CampaignResponse'
+    ValidationFailed:
+      description: Поля запроса не прошли валидацию.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Campaigns:
+      description: Пагинируемая коллекция кампаний.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CampaignCollection'
+    CampaignCreated:
+      description: Кампания создана.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Idempotency-Replayed:
+          $ref: '#/components/headers/IdempotencyReplayed'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CampaignResponse'
+    Forbidden:
+      description: Нет нужного scope или доступа к организации.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Conflict:
+      description: Idempotency-Key уже использован с другим запросом.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    ServerError:
+      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    BadRequest:
+      description: Повреждённый JSON или синтаксически неверный запрос.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
   securitySchemes:
     bearerAuth:
       type: http
