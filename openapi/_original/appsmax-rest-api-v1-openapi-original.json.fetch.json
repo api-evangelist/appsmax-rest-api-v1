@@ -1,0 +1,12 @@
+{
+ "url": "https://appsmax.ru/developers/openapi.json",
+ "requested_url": "https://appsmax.ru/developers/openapi.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 64637,
+ "sha256": "9fcf3cacc0b1563d2dba0bb614a03d9bc1a3cccc09838d154a1c94e8d6297639",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
