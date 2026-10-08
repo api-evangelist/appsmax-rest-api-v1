@@ -110,3 +110,46 @@ x-evidence:
       http_status: 200
     - url: https://appsmax.ru/.well-known/api-onboarding
       http_status: 200
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - subscription
+  units: []
+  plans:
+  - name: Старт
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Сообщества MAX
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Автоматизация
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Мини-приложения
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Профи
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
