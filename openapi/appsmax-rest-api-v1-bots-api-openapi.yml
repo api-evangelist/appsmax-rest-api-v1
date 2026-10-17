@@ -90,49 +90,9 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
-  headers:
-    RateLimitLimit:
-      description: Лимит запросов в текущем окне.
-      schema:
-        type: integer
-    CacheControl:
-      description: Ответы API не должны кешироваться.
-      schema:
-        type: string
-        example: no-store, private
-    RetryAfter:
-      description: Число секунд до повторной попытки.
-      schema:
-        type: integer
-    RateLimitRemaining:
-      description: Оставшееся число запросов в текущем окне.
-      schema:
-        type: integer
-    ApiVersion:
-      description: Фактическая версия API.
-      schema:
-        type: string
-        example: v1
-    RequestId:
-      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
-      schema:
-        type: string
   responses:
-    Bot:
-      description: Бот без секретов подключения.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-        Cache-Control:
-          $ref: '#/components/headers/CacheControl'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BotResponse'
-    NotFound:
-      description: Ресурс не найден в доступном контуре.
+    ValidationFailed:
+      description: Поля запроса не прошли валидацию.
       headers:
         X-Request-Id:
           $ref: '#/components/headers/RequestId'
@@ -142,8 +102,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiError'
-    Unauthorized:
-      description: Токен отсутствует, недействителен или отозван.
+    NotFound:
+      description: Ресурс не найден в доступном контуре.
       headers:
         X-Request-Id:
           $ref: '#/components/headers/RequestId'
@@ -166,17 +126,6 @@ components:
           $ref: '#/components/headers/RateLimitRemaining'
         Retry-After:
           $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    ValidationFailed:
-      description: Поля запроса не прошли валидацию.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
       content:
         application/json:
           schema:
@@ -218,6 +167,17 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiError'
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
     ServerError:
       description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
       headers:
@@ -229,37 +189,46 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiError'
-  parameters:
-    Driver:
-      name: driver
-      in: query
+    Bot:
+      description: Бот без секретов подключения.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BotResponse'
+  headers:
+    CacheControl:
+      description: Ответы API не должны кешироваться.
       schema:
         type: string
-    BotPath:
-      name: bot
-      in: path
-      required: true
-      schema:
-        type: integer
-        minimum: 1
-    PerPage100:
-      name: per_page
-      in: query
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-    StatusSingle:
-      name: status
-      in: query
+        example: no-store, private
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
       schema:
         type: string
-    Page:
-      name: page
-      in: query
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
       schema:
         type: integer
-        minimum: 1
+    RetryAfter:
+      description: Число секунд до повторной попытки.
+      schema:
+        type: integer
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
+      schema:
+        type: integer
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
   schemas:
     Bot:
       type: object
@@ -360,72 +329,6 @@ components:
           - string
           - 'null'
           format: date-time
-    ResourceEnvelope:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: object
-          additionalProperties: true
-    BotConnection:
-      type: object
-      required:
-      - bot_id
-      - driver
-      - status
-      properties:
-        bot_id:
-          type: integer
-        driver:
-          type:
-          - string
-          - 'null'
-        status:
-          type:
-          - string
-          - 'null'
-        identifier:
-          type:
-          - string
-          - 'null'
-        profile:
-          type:
-          - object
-          - 'null'
-          oneOf:
-          - $ref: '#/components/schemas/TelegramBotConnectionProfile'
-          - $ref: '#/components/schemas/MaxBotConnectionProfile'
-        last_synced_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-    CollectionEnvelope:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        links:
-          type: object
-          additionalProperties: true
-        meta:
-          type: object
-          additionalProperties: true
-    BotCollection:
-      allOf:
-      - $ref: '#/components/schemas/CollectionEnvelope'
-      - type: object
-        properties:
-          data:
-            type: array
-            items:
-              $ref: '#/components/schemas/Bot'
     MaxBotConnectionProfile:
       type: object
       additionalProperties: false
@@ -442,6 +345,83 @@ components:
           type:
           - string
           - 'null'
+    BotResponse:
+      allOf:
+      - $ref: '#/components/schemas/ResourceEnvelope'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/Bot'
+    BotCollection:
+      allOf:
+      - $ref: '#/components/schemas/CollectionEnvelope'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/Bot'
+    BotConnectionCollection:
+      allOf:
+      - $ref: '#/components/schemas/CollectionEnvelope'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/BotConnection'
+    ResourceEnvelope:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+    CollectionEnvelope:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        links:
+          type: object
+          additionalProperties: true
+        meta:
+          type: object
+          additionalProperties: true
+    ApiError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          - meta
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+            meta:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Идентификатор запроса для обращения в поддержку.
+              additionalProperties: true
     TelegramBotConnectionProfile:
       type: object
       additionalProperties: false
@@ -494,50 +474,70 @@ components:
           type:
           - string
           - 'null'
-    ApiError:
+    BotConnection:
       type: object
       required:
-      - error
+      - bot_id
+      - driver
+      - status
       properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          - meta
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details:
-              type: object
-              additionalProperties: true
-            meta:
-              type: object
-              required:
-              - request_id
-              properties:
-                request_id:
-                  type: string
-                  description: Идентификатор запроса для обращения в поддержку.
-              additionalProperties: true
-    BotResponse:
-      allOf:
-      - $ref: '#/components/schemas/ResourceEnvelope'
-      - type: object
-        properties:
-          data:
-            $ref: '#/components/schemas/Bot'
-    BotConnectionCollection:
-      allOf:
-      - $ref: '#/components/schemas/CollectionEnvelope'
-      - type: object
-        properties:
-          data:
-            type: array
-            items:
-              $ref: '#/components/schemas/BotConnection'
+        bot_id:
+          type: integer
+        driver:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+        identifier:
+          type:
+          - string
+          - 'null'
+        profile:
+          type:
+          - object
+          - 'null'
+          oneOf:
+          - $ref: '#/components/schemas/TelegramBotConnectionProfile'
+          - $ref: '#/components/schemas/MaxBotConnectionProfile'
+        last_synced_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+  parameters:
+    Driver:
+      name: driver
+      in: query
+      schema:
+        type: string
+    BotPath:
+      name: bot
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    PerPage100:
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    StatusSingle:
+      name: status
+      in: query
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
   securitySchemes:
     bearerAuth:
       type: http

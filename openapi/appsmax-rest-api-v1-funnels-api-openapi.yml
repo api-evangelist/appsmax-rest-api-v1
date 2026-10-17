@@ -48,36 +48,34 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
-  headers:
-    RateLimitLimit:
-      description: Лимит запросов в текущем окне.
+  parameters:
+    BotIdQuery:
+      name: bot_id
+      in: query
       schema:
         type: integer
-    CacheControl:
-      description: Ответы API не должны кешироваться.
-      schema:
-        type: string
-        example: no-store, private
-    RetryAfter:
-      description: Число секунд до повторной попытки.
+        minimum: 1
+    PerPage100:
+      name: per_page
+      in: query
       schema:
         type: integer
-    RateLimitRemaining:
-      description: Оставшееся число запросов в текущем окне.
+        minimum: 1
+        maximum: 100
+    Active:
+      name: active
+      in: query
+      schema:
+        type: boolean
+    Page:
+      name: page
+      in: query
       schema:
         type: integer
-    ApiVersion:
-      description: Фактическая версия API.
-      schema:
-        type: string
-        example: v1
-    RequestId:
-      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
-      schema:
-        type: string
+        minimum: 1
   responses:
-    NotFound:
-      description: Ресурс не найден в доступном контуре.
+    ValidationFailed:
+      description: Поля запроса не прошли валидацию.
       headers:
         X-Request-Id:
           $ref: '#/components/headers/RequestId'
@@ -87,8 +85,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiError'
-    Unauthorized:
-      description: Токен отсутствует, недействителен или отозван.
+    NotFound:
+      description: Ресурс не найден в доступном контуре.
       headers:
         X-Request-Id:
           $ref: '#/components/headers/RequestId'
@@ -115,8 +113,30 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiError'
-    ValidationFailed:
-      description: Поля запроса не прошли валидацию.
+    Forbidden:
+      description: Нет нужного scope или доступа к организации.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Unauthorized:
+      description: Токен отсутствует, недействителен или отозван.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        X-Api-Version:
+          $ref: '#/components/headers/ApiVersion'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    ServerError:
+      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
       headers:
         X-Request-Id:
           $ref: '#/components/headers/RequestId'
@@ -139,54 +159,76 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/FunnelCollection'
-    Forbidden:
-      description: Нет нужного scope или доступа к организации.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-    ServerError:
-      description: Непредвиденная ошибка. Передайте X-Request-Id в поддержку AppsMax.
-      headers:
-        X-Request-Id:
-          $ref: '#/components/headers/RequestId'
-        X-Api-Version:
-          $ref: '#/components/headers/ApiVersion'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiError'
-  parameters:
-    PerPage100:
-      name: per_page
-      in: query
+  headers:
+    CacheControl:
+      description: Ответы API не должны кешироваться.
+      schema:
+        type: string
+        example: no-store, private
+    RequestId:
+      description: Идентификатор запроса. При корректном входящем X-Request-Id AppsMax возвращает его без изменения.
+      schema:
+        type: string
+    RateLimitLimit:
+      description: Лимит запросов в текущем окне.
       schema:
         type: integer
-        minimum: 1
-        maximum: 100
-    Active:
-      name: active
-      in: query
-      schema:
-        type: boolean
-    BotIdQuery:
-      name: bot_id
-      in: query
+    RetryAfter:
+      description: Число секунд до повторной попытки.
       schema:
         type: integer
-        minimum: 1
-    Page:
-      name: page
-      in: query
+    RateLimitRemaining:
+      description: Оставшееся число запросов в текущем окне.
       schema:
         type: integer
-        minimum: 1
+    ApiVersion:
+      description: Фактическая версия API.
+      schema:
+        type: string
+        example: v1
   schemas:
+    Funnel:
+      type: object
+      required:
+      - id
+      - bot_id
+      - title
+      - is_active
+      properties:
+        id:
+          type: integer
+        bot_id:
+          type: integer
+        title:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        is_active:
+          type: boolean
+        restart_mode:
+          type:
+          - string
+          - 'null'
+        start_block_id:
+          type:
+          - integer
+          - 'null'
+        version:
+          type:
+          - integer
+          - 'null'
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
     FunnelCollection:
       allOf:
       - $ref: '#/components/schemas/CollectionEnvelope'
@@ -240,48 +282,6 @@ components:
                   type: string
                   description: Идентификатор запроса для обращения в поддержку.
               additionalProperties: true
-    Funnel:
-      type: object
-      required:
-      - id
-      - bot_id
-      - title
-      - is_active
-      properties:
-        id:
-          type: integer
-        bot_id:
-          type: integer
-        title:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-        is_active:
-          type: boolean
-        restart_mode:
-          type:
-          - string
-          - 'null'
-        start_block_id:
-          type:
-          - integer
-          - 'null'
-        version:
-          type:
-          - integer
-          - 'null'
-        created_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
   securitySchemes:
     bearerAuth:
       type: http
