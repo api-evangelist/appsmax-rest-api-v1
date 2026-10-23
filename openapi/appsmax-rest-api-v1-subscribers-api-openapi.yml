@@ -623,3 +623,9 @@ x-appsmax-verified-at: '2026-08-09'
 x-appsmax-default-rate-limit-per-minute: 60
 x-appsmax-public-sdk: false
 x-appsmax-webhooks-covered: false
+x-provenance:
+  method: harvested
+  publisher: AppsMax
+  source: https://appsmax.ru/developers/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
