@@ -1,4 +1,4 @@
-# AppsMax (appsmax.ru:api-catalog)
+# AppsMax
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,314 +66,148 @@
 
 AppsMax.ru is a Russian-language SaaS platform for small business, communities and integrators, used to run customer requests, online booking, orders, mini apps, groups, channels, permitted messaging, GigaChat and integrations inside MAX and Telegram. Its developer surface is a single server-to-server REST API (v1) with a published OpenAPI 3.0.3 contract, an APIs.json index, an API Onboarding Descriptor and an llms.txt. AppsMax is not a product of, nor an official representative of, MAX, Telegram or GigaChat.
 
-**APIs.json:** [https://appsmax-rest-api-v1.apievangelist.com/apis.yml](https://appsmax-rest-api-v1.apievangelist.com/apis.yml)
+**Areas:** Company · Software-as-a-Service · Messaging · Business Automation · Chatbots · Mini Apps · Customer Requests · Workflow Automation · MAX · Telegram · Russian Language
 
-## Scope
+## AppsMax on APIs.io
 
-- **Type:** Index
+Everything profiled for AppsMax is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/appsmax-rest-api-v1/](https://apis.io/providers/appsmax-rest-api-v1/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (9)
 
-- Company
-- SaaS
-- Messaging
-- Business Automation
-- Chatbots
-- Mini Apps
-- Customer Requests
-- Workflow Automation
-- MAX
-- Telegram
-- Russian Language
+- [AppsMax Access API](https://apis.io/apis/appsmax-rest-api-v1/appsmax-rest-api-v1-access-api/) — Проверка токена и контекста организации.
+- [AppsMax Applications API](https://apis.io/apis/appsmax-rest-api-v1/appsmax-rest-api-v1-applications-api/) — Заявки и их теги.
+- [AppsMax Bots API](https://apis.io/apis/appsmax-rest-api-v1/appsmax-rest-api-v1-bots-api/) — Боты и их безопасные сведения о подключении без секретов.
+- [AppsMax Campaigns API](https://apis.io/apis/appsmax-rest-api-v1/appsmax-rest-api-v1-campaigns-api/) — Рассылки и их запуск.
+- [AppsMax Funnels API](https://apis.io/apis/appsmax-rest-api-v1/appsmax-rest-api-v1-funnels-api/) — Сценарии и воронки ботов.
+- [AppsMax Interactive menu API](https://apis.io/apis/appsmax-rest-api-v1/appsmax-rest-api-v1-interactive-menu-api/) — Элементы интерактивного меню ботов.
+- [AppsMax Miniapps API](https://apis.io/apis/appsmax-rest-api-v1/appsmax-rest-api-v1-miniapps-api/) — Мини-приложения организации.
+- [AppsMax Organizations API](https://apis.io/apis/appsmax-rest-api-v1/appsmax-rest-api-v1-organizations-api/) — Организация, к которой привязан токен.
+- [AppsMax Subscribers API](https://apis.io/apis/appsmax-rest-api-v1/appsmax-rest-api-v1-subscribers-api/) — Подписчики и их сегментационные теги.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-07-31
-- **Modified:** 2026-08-09
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### MCP servers (1)
 
-### AppsMax Access API
+Model Context Protocol servers that expose the API to agents.
 
-Проверка токена и контекста организации.
+- [appsmax](https://apis.io/servers/appsmax-rest-api-v1/appsmax/)
 
-- **Human URL:** [https://appsmax.ru/developers/](https://appsmax.ru/developers/)
-- **Base URL:** `https://telegram.appsmax.ru/api/v1`
+#### Agentic access (1)
 
-#### Tags
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- Access
+- [Appsmax Rest Api V1 Agentic Access](https://apis.io/agentic-access/appsmax-rest-api-v1/appsmax-rest-api-v1-agentic-access/)
 
-#### Properties
+#### Collections (10)
 
-- [OpenAPI](openapi/appsmax-rest-api-v1-access-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/appsmax-rest-api-v1-access-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/appsmax-rest-api-v1-access-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Documentation](https://appsmax.ru/developers/)
-- [Getting Started](https://appsmax.ru/developers/#quick-start)
-- [Authentication](https://appsmax.ru/developers/#authentication)
-- [A P I Onboarding](https://appsmax.ru/.well-known/api-onboarding)
-- [Rate Limits](https://appsmax.ru/developers/#errors)
-- [Pricing](https://appsmax.ru/pricing/)
-- [Terms of Service](https://appsmax.ru/documents/publichnaya-oferta/)
-- [Privacy Policy](https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/)
-- [Support](https://appsmax.ru/contacts/)
-- [L L M S Txt](https://appsmax.ru/llms.txt)
+Postman and Open Collection request collections.
 
-### AppsMax Applications API
+- [AppsMax REST Access API](https://apis.io/collections/appsmax-rest-api-v1/open-appsmax-rest-api-v1-access-api/)
+- [AppsMax REST Applications API](https://apis.io/collections/appsmax-rest-api-v1/open-appsmax-rest-api-v1-applications-api/)
+- [AppsMax REST Bots API](https://apis.io/collections/appsmax-rest-api-v1/open-appsmax-rest-api-v1-bots-api/)
+- [AppsMax REST Campaigns API](https://apis.io/collections/appsmax-rest-api-v1/open-appsmax-rest-api-v1-campaigns-api/)
+- [AppsMax REST Funnels API](https://apis.io/collections/appsmax-rest-api-v1/open-appsmax-rest-api-v1-funnels-api/)
+- [AppsMax REST Interactive menu API](https://apis.io/collections/appsmax-rest-api-v1/open-appsmax-rest-api-v1-interactive-menu-api/)
+- [AppsMax REST Miniapps API](https://apis.io/collections/appsmax-rest-api-v1/open-appsmax-rest-api-v1-miniapps-api/)
+- [AppsMax REST Organizations API](https://apis.io/collections/appsmax-rest-api-v1/open-appsmax-rest-api-v1-organizations-api/)
+- [AppsMax REST Subscribers API](https://apis.io/collections/appsmax-rest-api-v1/open-appsmax-rest-api-v1-subscribers-api/)
+- [AppsMax REST API v1 — Quickstart](https://apis.io/collections/appsmax-rest-api-v1/postman-appsmax-rest-api-v1-quickstart/)
 
-Заявки и их теги.
+#### Overlays (1)
 
-- **Human URL:** [https://appsmax.ru/developers/](https://appsmax.ru/developers/)
-- **Base URL:** `https://telegram.appsmax.ru/api/v1`
+OpenAPI overlays, including conversational phrasing for each operation.
 
-#### Tags
+- [Appsmax Rest Api V1 Rest Api V1 Overlay](https://apis.io/overlays/appsmax-rest-api-v1/appsmax-rest-api-v1-rest-api-v1-overlay/)
 
-- Applications
+#### Security (3)
 
-#### Properties
+Authentication, trust centre, and vulnerability disclosure.
 
-- [OpenAPI](openapi/appsmax-rest-api-v1-applications-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/appsmax-rest-api-v1-applications-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/appsmax-rest-api-v1-applications-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Documentation](https://appsmax.ru/developers/)
-- [Getting Started](https://appsmax.ru/developers/#quick-start)
-- [Authentication](https://appsmax.ru/developers/#authentication)
-- [A P I Onboarding](https://appsmax.ru/.well-known/api-onboarding)
-- [Rate Limits](https://appsmax.ru/developers/#errors)
-- [Pricing](https://appsmax.ru/pricing/)
-- [Terms of Service](https://appsmax.ru/documents/publichnaya-oferta/)
-- [Privacy Policy](https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/)
-- [Support](https://appsmax.ru/contacts/)
-- [L L M S Txt](https://appsmax.ru/llms.txt)
+- [Appsmax Rest Api V1 Authentication](https://apis.io/security/appsmax-rest-api-v1/appsmax-rest-api-v1-authentication/)
+- [Appsmax Rest Api V1 Domain Security](https://apis.io/security/appsmax-rest-api-v1/appsmax-rest-api-v1-domain-security/)
+- [Appsmax Rest Api V1 Vulnerability Disclosure](https://apis.io/security/appsmax-rest-api-v1/appsmax-rest-api-v1-vulnerability-disclosure/)
 
-### AppsMax Bots API
+#### OAuth scopes (1)
 
-Боты и их безопасные сведения о подключении без секретов.
+The permissions the API asks for.
 
-- **Human URL:** [https://appsmax.ru/developers/](https://appsmax.ru/developers/)
-- **Base URL:** `https://telegram.appsmax.ru/api/v1`
+- [Appsmax Rest Api V1 Scopes](https://apis.io/scopes/appsmax-rest-api-v1/appsmax-rest-api-v1-scopes/)
 
-#### Tags
+#### Plans and pricing (1)
 
-- Bots
+Published plans, tiers and prices.
 
-#### Properties
+- [Appsmax Rest Api V1 Plans](https://apis.io/plans/appsmax-rest-api-v1/appsmax-rest-api-v1-plans/)
 
-- [OpenAPI](openapi/appsmax-rest-api-v1-bots-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/appsmax-rest-api-v1-bots-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/appsmax-rest-api-v1-bots-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Documentation](https://appsmax.ru/developers/)
-- [Getting Started](https://appsmax.ru/developers/#quick-start)
-- [Authentication](https://appsmax.ru/developers/#authentication)
-- [A P I Onboarding](https://appsmax.ru/.well-known/api-onboarding)
-- [Rate Limits](https://appsmax.ru/developers/#errors)
-- [Pricing](https://appsmax.ru/pricing/)
-- [Terms of Service](https://appsmax.ru/documents/publichnaya-oferta/)
-- [Privacy Policy](https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/)
-- [Support](https://appsmax.ru/contacts/)
-- [L L M S Txt](https://appsmax.ru/llms.txt)
+#### Rate limits (1)
 
-### AppsMax Campaigns API
+Published request limits.
 
-Рассылки и их запуск.
+- [Appsmax Rest Api V1 Rate Limits](https://apis.io/rate-limits/appsmax-rest-api-v1/appsmax-rest-api-v1-rate-limits/)
 
-- **Human URL:** [https://appsmax.ru/developers/](https://appsmax.ru/developers/)
-- **Base URL:** `https://telegram.appsmax.ru/api/v1`
-
-#### Tags
+## Where to find this API
 
-- Campaigns
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-#### Properties
-
-- [OpenAPI](openapi/appsmax-rest-api-v1-campaigns-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/appsmax-rest-api-v1-campaigns-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/appsmax-rest-api-v1-campaigns-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Documentation](https://appsmax.ru/developers/)
-- [Getting Started](https://appsmax.ru/developers/#quick-start)
-- [Authentication](https://appsmax.ru/developers/#authentication)
-- [A P I Onboarding](https://appsmax.ru/.well-known/api-onboarding)
-- [Rate Limits](https://appsmax.ru/developers/#errors)
-- [Pricing](https://appsmax.ru/pricing/)
-- [Terms of Service](https://appsmax.ru/documents/publichnaya-oferta/)
-- [Privacy Policy](https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/)
-- [Support](https://appsmax.ru/contacts/)
-- [L L M S Txt](https://appsmax.ru/llms.txt)
-
-### AppsMax Funnels API
-
-Сценарии и воронки ботов.
-
-- **Human URL:** [https://appsmax.ru/developers/](https://appsmax.ru/developers/)
-- **Base URL:** `https://telegram.appsmax.ru/api/v1`
-
-#### Tags
-
-- Funnels
-
-#### Properties
-
-- [OpenAPI](openapi/appsmax-rest-api-v1-funnels-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/appsmax-rest-api-v1-funnels-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/appsmax-rest-api-v1-funnels-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Documentation](https://appsmax.ru/developers/)
-- [Getting Started](https://appsmax.ru/developers/#quick-start)
-- [Authentication](https://appsmax.ru/developers/#authentication)
-- [A P I Onboarding](https://appsmax.ru/.well-known/api-onboarding)
-- [Rate Limits](https://appsmax.ru/developers/#errors)
-- [Pricing](https://appsmax.ru/pricing/)
-- [Terms of Service](https://appsmax.ru/documents/publichnaya-oferta/)
-- [Privacy Policy](https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/)
-- [Support](https://appsmax.ru/contacts/)
-- [L L M S Txt](https://appsmax.ru/llms.txt)
-
-### AppsMax Interactive menu API
-
-Элементы интерактивного меню ботов.
-
-- **Human URL:** [https://appsmax.ru/developers/](https://appsmax.ru/developers/)
-- **Base URL:** `https://telegram.appsmax.ru/api/v1`
-
-#### Tags
-
-- Interactive menu
-
-#### Properties
-
-- [OpenAPI](openapi/appsmax-rest-api-v1-interactive-menu-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/appsmax-rest-api-v1-interactive-menu-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/appsmax-rest-api-v1-interactive-menu-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Documentation](https://appsmax.ru/developers/)
-- [Getting Started](https://appsmax.ru/developers/#quick-start)
-- [Authentication](https://appsmax.ru/developers/#authentication)
-- [A P I Onboarding](https://appsmax.ru/.well-known/api-onboarding)
-- [Rate Limits](https://appsmax.ru/developers/#errors)
-- [Pricing](https://appsmax.ru/pricing/)
-- [Terms of Service](https://appsmax.ru/documents/publichnaya-oferta/)
-- [Privacy Policy](https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/)
-- [Support](https://appsmax.ru/contacts/)
-- [L L M S Txt](https://appsmax.ru/llms.txt)
-
-### AppsMax Miniapps API
-
-Мини-приложения организации.
-
-- **Human URL:** [https://appsmax.ru/developers/](https://appsmax.ru/developers/)
-- **Base URL:** `https://telegram.appsmax.ru/api/v1`
-
-#### Tags
-
-- Miniapps
-
-#### Properties
-
-- [OpenAPI](openapi/appsmax-rest-api-v1-miniapps-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/appsmax-rest-api-v1-miniapps-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/appsmax-rest-api-v1-miniapps-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Documentation](https://appsmax.ru/developers/)
-- [Getting Started](https://appsmax.ru/developers/#quick-start)
-- [Authentication](https://appsmax.ru/developers/#authentication)
-- [A P I Onboarding](https://appsmax.ru/.well-known/api-onboarding)
-- [Rate Limits](https://appsmax.ru/developers/#errors)
-- [Pricing](https://appsmax.ru/pricing/)
-- [Terms of Service](https://appsmax.ru/documents/publichnaya-oferta/)
-- [Privacy Policy](https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/)
-- [Support](https://appsmax.ru/contacts/)
-- [L L M S Txt](https://appsmax.ru/llms.txt)
-
-### AppsMax Organizations API
-
-Организация, к которой привязан токен.
-
-- **Human URL:** [https://appsmax.ru/developers/](https://appsmax.ru/developers/)
-- **Base URL:** `https://telegram.appsmax.ru/api/v1`
-
-#### Tags
-
-- Organizations
-
-#### Properties
-
-- [OpenAPI](openapi/appsmax-rest-api-v1-organizations-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/appsmax-rest-api-v1-organizations-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/appsmax-rest-api-v1-organizations-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Documentation](https://appsmax.ru/developers/)
-- [Getting Started](https://appsmax.ru/developers/#quick-start)
-- [Authentication](https://appsmax.ru/developers/#authentication)
-- [A P I Onboarding](https://appsmax.ru/.well-known/api-onboarding)
-- [Rate Limits](https://appsmax.ru/developers/#errors)
-- [Pricing](https://appsmax.ru/pricing/)
-- [Terms of Service](https://appsmax.ru/documents/publichnaya-oferta/)
-- [Privacy Policy](https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/)
-- [Support](https://appsmax.ru/contacts/)
-- [L L M S Txt](https://appsmax.ru/llms.txt)
-
-### AppsMax Subscribers API
-
-Подписчики и их сегментационные теги.
-
-- **Human URL:** [https://appsmax.ru/developers/](https://appsmax.ru/developers/)
-- **Base URL:** `https://telegram.appsmax.ru/api/v1`
-
-#### Tags
-
-- Subscribers
-
-#### Properties
-
-- [OpenAPI](openapi/appsmax-rest-api-v1-subscribers-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/appsmax-rest-api-v1-subscribers-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/appsmax-rest-api-v1-subscribers-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Documentation](https://appsmax.ru/developers/)
-- [Getting Started](https://appsmax.ru/developers/#quick-start)
-- [Authentication](https://appsmax.ru/developers/#authentication)
-- [A P I Onboarding](https://appsmax.ru/.well-known/api-onboarding)
-- [Rate Limits](https://appsmax.ru/developers/#errors)
-- [Pricing](https://appsmax.ru/pricing/)
-- [Terms of Service](https://appsmax.ru/documents/publichnaya-oferta/)
-- [Privacy Policy](https://appsmax.ru/documents/politika-obrabotki-personalnyh-dannyh/)
-- [Support](https://appsmax.ru/contacts/)
-- [L L M S Txt](https://appsmax.ru/llms.txt)
-
-## Common Properties
-
-- [M C P Server](mcp/appsmax-rest-api-v1-mcp.yml)
-- [Agentic Access](agentic-access/appsmax-rest-api-v1-agentic-access.yml)
-- [Domain Security](security/appsmax-rest-api-v1-domain-security.yml)
-- [Authentication](authentication/appsmax-rest-api-v1-authentication.yml)
 - [Website](https://appsmax.ru/)
-- [A P Is J S O N](https://appsmax.ru/apis.json)
-- [Developer Portal](https://appsmax.ru/developers/)
-- [API Reference](https://appsmax.ru/developers/#methods)
+- [API reference](https://appsmax.ru/developers/#methods)
+- [Sign up](https://telegram.appsmax.ru/register)
 - [Blog](https://appsmax.ru/news/)
-- [Blog R S S](https://appsmax.ru/news/feed/)
-- [Sign Up](https://telegram.appsmax.ru/register)
-- [Login](https://telegram.appsmax.ru/login)
-- [Help Center](https://appsmax.ru/kb/)
-- [F A Q](https://appsmax.ru/faq/)
-- [Source Code](https://gitverse.ru/appsmax/appsmax-api-reference)
-- [Postman](https://gitverse.ru/appsmax/appsmax-api-reference) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Conventions](conventions/appsmax-rest-api-v1-conventions.yml)
-- [Idempotency](conventions/appsmax-rest-api-v1-conventions.yml)
-- [Error Catalog](errors/appsmax-rest-api-v1-problem-types.yml)
-- [Lifecycle](lifecycle/appsmax-rest-api-v1-lifecycle.yml)
-- [Scopes](scopes/appsmax-rest-api-v1-scopes.yml)
-- [Conformance](conformance/appsmax-rest-api-v1-conformance.yml)
-- [Data Model](data-model/appsmax-rest-api-v1-data-model.yml)
-- [Packages](packages/appsmax-rest-api-v1-packages.yml)
-- [Well Known](well-known/appsmax-rest-api-v1-well-known.yml)
-- [L L Ms Txt](llms/appsmax-rest-api-v1-llms.txt)
-- [Overlay](overlays/appsmax-rest-api-v1-rest-api-v1-overlay.yaml)
-- [Examples](examples/_index.yml)
-- [Agent Skill](skills/_index.yml)
-- [Rate Limits](rate-limits/appsmax-rest-api-v1-rate-limits.yml)
-- [Plans](plans/appsmax-rest-api-v1-plans.yml)
-- [Vulnerability Disclosure](security/appsmax-rest-api-v1-vulnerability-disclosure.yml)
 - [Security](https://gitverse.ru/appsmax/appsmax-api-reference)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** AppsMax.ru team
-**Email:** info@appsmax.ru
-**URL:** https://appsmax.ru/developers/
+**Kin Score 61.4** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 51.3 |
+| Contract governance | 4.5 |
+| Operational transparency | 47.4 |
+| Developer ergonomics | 63.7 |
+| Access clarity | 76.3 |
+
+**Agent readiness 33.8** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | verified |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | verified |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 40.2** — AI & Biometrics
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/appsmax-rest-api-v1/](https://apis.io/providers/appsmax-rest-api-v1/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for AppsMax: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/appsmax-rest-api-v1/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
