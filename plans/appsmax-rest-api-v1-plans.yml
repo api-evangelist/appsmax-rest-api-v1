@@ -1,0 +1,101 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://appsmax.ru/pricing/
+sources:
+- https://appsmax.ru/pricing/
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T141238
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: tiered-subscription
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-10-28'
+published: true
+note: Russian-language tiered subscription page; discounts for 3/6/12 months (−10%/−15%/−20%). GigaChat
+  provider access paid separately.
+plan_count: 5
+currency: RUB
+plans:
+- name: Старт
+  price_text: 0 ₽ в месяц
+  price: 0
+  currency: RUB
+  period: month
+  included_quota: Один бот — MAX или Telegram; заявки с WordPress и Tilda; интерактивное меню
+- name: Сообщества MAX
+  price_text: 490 ₽ в месяц
+  price: 490
+  currency: RUB
+  period: month
+  included_quota: До трёх групп и трёх каналов MAX
+- name: Автоматизация
+  price_text: 1 000 ₽ в месяц
+  price: 1000
+  currency: RUB
+  period: month
+  included_quota: До двух ботов; REST API и проверяемые интеграции
+- name: Мини-приложения
+  price_text: 3 000 ₽ в месяц
+  price: 3000
+  currency: RUB
+  period: month
+  included_quota: До десяти мини-приложений
+- name: Профи
+  price_text: 5 000 ₽ в месяц
+  price: 5000
+  currency: RUB
+  period: month
+  included_quota: До шести ботов; мини-приложения без числового лимита
+rate_limit_statements:
+- До трёх групп и трёх каналов MAX
+- До двух ботов
+- До десяти мини-приложений
+- До шести ботов
+- Контакты. Числовой лимит пока не публикуем
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - free
+  - subscription
+  units: []
+  plans:
+  - name: Старт
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Сообщества MAX
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Автоматизация
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Мини-приложения
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Профи
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
